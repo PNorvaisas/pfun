@@ -14,12 +14,12 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   samples.indata<-unique(lmshape$Sample)
   samples.incontrasts<-colnames(cont.matrix)
   
-  if (len(setdiff(samples.indata,samples.incontrasts))>0) {
+  if (length(setdiff(samples.indata,samples.incontrasts))>0) {
     #More samples in data
     print('Some of the samples in data not described in contrasts!')
     samples.nocontrast<-setdiff(samples.indata,samples.incontrasts)
     samples.found<-intersect(samples.incontrasts,samples.indata)
-  } else if (len(setdiff(samples.incontrasts,samples.indata))>0) {
+  } else if (length(setdiff(samples.incontrasts,samples.indata))>0) {
     #More samples in contrasts
     print('Some of the samples in contrasts not described in data!')
     samples.miss<-setdiff(samples.incontrasts,samples.indata)
