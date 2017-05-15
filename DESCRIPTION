@@ -5,7 +5,7 @@ Authors@R: person("Povilas", "Norvaisas", email = "povilas.norvaisas@gmail.com",
 Description: Collection of useful functions.
 Depends: R (>= 3.3.2)
 Imports:
-      xlsx,
+      xlsx2,
       plyr,
       reshape2,
       multcomp,
