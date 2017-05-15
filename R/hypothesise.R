@@ -11,6 +11,43 @@
 
 
 hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
+  samples.indata<-unique(lmshape$Sample)
+  samples.incontrasts<-colnames(cont.matrix)
+  
+  if (len(setdiff(samples.indata,samples.incontrasts))>0) {
+    #More samples in data
+    print('Some of the samples in data not described in contrasts!')
+    samples.nocontrast<-setdiff(samples.indata,samples.incontrasts)
+    samples.found<-intersect(samples.incontrasts,samples.indata)
+  } else if (len(setdiff(samples.incontrasts,samples.indata))>0) {
+    #More samples in contrasts
+    print('Some of the samples in contrasts not described in data!')
+    samples.miss<-setdiff(samples.incontrasts,samples.indata)
+    samples.found<-intersect(samples.incontrasts,samples.indata)
+  } else {
+    print('All samples from match in contrasts and data!')
+    samples.found<-intersect(samples.incontrasts,samples.indata)
+  }
+
+  #Find contrasts that do not require missing samples
+  #Each contrast requires both -1 and 1 or just 1
+  cont.use<-samples.incontrasts[apply(cont.matrix[,samples.found],1,function(x) (any(x==1) & any(x==-1)) | any(x==1) )]
+  
+  if (length(samples.missing)>0) {
+    cont.nomiss<-samples.incontrasts[apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
+    #Select contrasts that don't use missing samples
+    cont.clean<-intersect(cont.nomiss,cont.use)
+  } else {
+    cont.clean<-cont.use
+  }
+  
+  lmshape<-subset(lmshape,Sample %in% samples.found)
+  cont.matrix[cont.clean,samples.found]
+  
+  lmshape$Sample<-factor(lmshape$Sample,levels=colnames(cont.matrix),labels=colnames(cont.matrix))
+  
+  #Fix it to the smallest overlapping set
+  
   allresults.t<-data.frame()
   prec<-0
   len<-length(variables)
@@ -36,7 +73,6 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   allresults$NE<-allresults$logFC-allresults$SE
   allresults$FDR<-p.adjust(allresults$p.value,method = 'fdr')
   allresults$logFDR<--log10(allresults$FDR)
-  
   
   allresults.m<-melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','t.value','p.value','FDR'),
                      variable.name = 'Stats',value.name = 'Value')
