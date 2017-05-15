@@ -4,6 +4,11 @@ Version: 0.0.1.9000
 Authors@R: person("Povilas", "Norvaisas", email = "povilas.norvaisas@gmail.com", role = c("aut", "cre"))
 Description: Collection of useful functions.
 Depends: R (>= 3.3.2)
+Imports:
+      plyr,
+      reshape2,
+      multcomp,
+      contrast
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
