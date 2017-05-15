@@ -1,6 +1,6 @@
 #' Linear Hypothesis Testing in HT manner
 #'
-#' @param lmshape Table containing sampels in rows and variables in columns
+#' @param lmshape Table containing samples in rows and variables in columns
 #' @param variables Variables to be tested in model
 #' @param cont.matrix Contrast matrix with dummy variables
 #' @param formula Formula that will be used to spread the effects of samples. DEFAULT to "0+Sample"

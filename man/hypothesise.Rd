@@ -7,7 +7,7 @@
 hypothesise(lmshape, variables, cont.matrix, formula = "0+Sample")
 }
 \arguments{
-\item{lmshape}{Table containing sampels in rows and variables in columns}
+\item{lmshape}{Table containing samples in rows and variables in columns}
 
 \item{variables}{Variables to be tested in model}
 
