@@ -19,6 +19,8 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     print('Some of the samples in data not described in contrasts!')
     samples.nocontrast<-setdiff(samples.indata,samples.incontrasts)
     samples.found<-intersect(samples.incontrasts,samples.indata)
+    
+    samples.miss<-c()
   } else if (length(setdiff(samples.incontrasts,samples.indata))>0) {
     #More samples in contrasts
     print('Some of the samples in contrasts not described in data!')
@@ -26,6 +28,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     samples.found<-intersect(samples.incontrasts,samples.indata)
   } else {
     print('All samples from match in contrasts and data!')
+    samples.miss<-c()
     samples.found<-intersect(samples.incontrasts,samples.indata)
   }
 
@@ -33,7 +36,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   #Each contrast requires both -1 and 1 or just 1
   cont.use<-samples.incontrasts[apply(cont.matrix[,samples.found],1,function(x) (any(x==1) & any(x==-1)) | any(x==1) )]
   
-  if (length(samples.missing)>0) {
+  if (length(samples.miss)>0) {
     cont.nomiss<-samples.incontrasts[apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
     #Select contrasts that don't use missing samples
     cont.clean<-intersect(cont.nomiss,cont.use)
