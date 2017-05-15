@@ -1,6 +1,6 @@
 Package: PFun
 Title: Framework For HT Workflows
-Version: 0.0.1.2
+Version: 0.0.1.3
 Authors@R: person("Povilas", "Norvaisas", email = "povilas.norvaisas@gmail.com", role = c("aut", "cre"))
 Description: Collection of useful functions.
 Depends: R (>= 3.3.2)

@@ -46,8 +46,8 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   }
   
 
-  cont.table.clean<-cont.table[cont.clean,]
-  cont.table.selected<-cont.table[cont.clean, samples.found]
+  cont.table.clean<-cont.table[cont.clean,,drop=FALSE]
+  cont.table.selected<-cont.table[cont.clean, samples.found,drop=FALSE]
   cont.matrix<-as.matrix(cont.table.selected)
   
   return(list("Contrasts.table"=cont.table.clean,"Contrasts.matrix"=cont.matrix))

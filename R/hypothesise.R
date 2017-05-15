@@ -10,11 +10,14 @@
 #' hypothesise()
 
 
+
 hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   samples.indata<-unique(lmshape$Sample)
   samples.incontrasts<-colnames(cont.matrix)
+  #print(samples.indata)
+  #print(samples.incontrasts)
   
-  if (length(setdiff(samples.indata,samples.incontrasts))>0) {
+  if (length( setdiff(samples.indata,samples.incontrasts) )>0 ) {
     #More samples in data
     print('Some of the samples in data not described in contrasts!')
     samples.nocontrast<-setdiff(samples.indata,samples.incontrasts)
@@ -23,31 +26,41 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   } else if (length(setdiff(samples.incontrasts,samples.indata))>0) {
     #More samples in contrasts
     print('Some of the samples in contrasts not described in data!')
+    samples.nocontrast<-c()
     samples.miss<-setdiff(samples.incontrasts,samples.indata)
     samples.found<-intersect(samples.incontrasts,samples.indata)
   } else {
     print('All samples from match in contrasts and data!')
+    samples.nocontrast<-c()
     samples.miss<-c()
     samples.found<-intersect(samples.incontrasts,samples.indata)
   }
-
-  #Find contrasts that do not require missing samples
-  #Each contrast requires both -1 and 1 or just 1
-  cont.use<-samples.incontrasts[apply(cont.matrix[,samples.found],1,function(x) (any(x==1) & any(x==-1)) | any(x==1) )]
   
-  print(cont.use)
+  
+  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,samples.found],1, function(x) ( any(x==1) & any(x==-1) ) | any(x==1) ) ]
+  
+  #print(cont.use)
   if (length(samples.miss)>0) {
-    cont.nomiss<-samples.incontrasts[apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
+    cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
     #Select contrasts that don't use missing samples
     cont.clean<-intersect(cont.nomiss,cont.use)
   } else {
     cont.clean<-cont.use
   }
   
-  lmshape<-subset(lmshape,Sample %in% samples.found)
-  cont.matrix[cont.clean,samples.found]
   
-  lmshape$Sample<-factor(lmshape$Sample,levels=colnames(cont.matrix),labels=colnames(cont.matrix))
+  print('Selected contrasts:')
+  print(cont.clean)
+  
+  lmshape<-subset(lmshape,Sample %in% samples.found)
+  
+  cont.matrix.clean<-cont.matrix[cont.clean,samples.found,drop=FALSE]
+  
+  #rownames(cont.matrix)
+  #print(cont.matrix)
+  #print(cont.matrix.clean)
+  
+  lmshape$Sample<-factor(lmshape$Sample,levels=colnames(cont.matrix.clean),labels=colnames(cont.matrix.clean))
   
   #Fix it to the smallest overlapping set
   
@@ -63,7 +76,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     }
     model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
     #Generalised linear hypothesis testing
-    lmod_glht <- glht(model, linfct = cont.matrix)
+    lmod_glht <- glht(model, linfct = cont.matrix.clean)
     result<-summary(lmod_glht,test=adjusted("none"))
     res<-ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
     res$Variable<-pr
@@ -87,3 +100,4 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   
   return(list("All"=allresults,"Cast"=allresults.cast,"Melt"=allresults.m,"CastFull"=allresults.castfull))
 }
+
