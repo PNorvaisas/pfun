@@ -90,7 +90,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   allresults$FDR<-p.adjust(allresults$p.value,method = 'fdr')
   allresults$logFDR<--log10(allresults$FDR)
   
-  allresults.m<-melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','t.value','p.value','FDR'),
+  allresults.m<-melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','NE','PE','t.value','p.value','FDR'),
                      variable.name = 'Stats',value.name = 'Value')
   
   allresults.castfull<-dcast(allresults.m,Variable~Contrast+Stats,value.var = 'Value')
