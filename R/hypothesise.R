@@ -30,7 +30,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     samples.miss<-setdiff(samples.incontrasts,samples.indata)
     samples.found<-intersect(samples.incontrasts,samples.indata)
   } else {
-    print('All samples from match in contrasts and data!')
+    print('All samples from contrasts and data match!')
     samples.nocontrast<-c()
     samples.miss<-c()
     samples.found<-intersect(samples.incontrasts,samples.indata)

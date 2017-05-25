@@ -36,7 +36,7 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   #print(samples.missing)
   
   #Find contrasts that do not require missing samples
-  cont.use<-contrasts[apply(cont.table[,samples.found],1,function(x) any(x==1) & any(x==-1) )]
+  cont.use<-contrasts[apply(cont.table[,samples.found],1,function(x) any(x==1) | any(x==-1) )]
   
   if ( length(samples.missing)>0 ) {
     cont.nomiss<-contrasts[apply(cont.table[,samples.missing],1,function(x) all(x==0) )]
