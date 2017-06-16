@@ -23,9 +23,9 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   
   if ('m' %in% samples.all){
     samples.all<-setdiff(samples.all,'m')
-    mval=TRUE
+    mval<-TRUE
   } else {
-    mval=FALSE
+    mval<-FALSE
   }
   
   samples.found<-intersect(samples.all,samples.selected)
