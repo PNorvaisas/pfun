@@ -21,6 +21,13 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) length(setdiff(x,c('-1','0','1')))==0)]
   cont.table[,samples.all] <- sapply(cont.table[, samples.all], as.numeric)
   
+  if ('m' %in% samples.all){
+    samples.all<-setdiff(samples.all,'m')
+    mval=TRUE
+  } else {
+    mval=FALSE
+  }
+  
   samples.found<-intersect(samples.all,samples.selected)
   samples.missing<-setdiff(samples.all,samples.found)
   
@@ -47,7 +54,14 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   
 
   cont.table.clean<-cont.table[cont.clean,,drop=FALSE]
-  cont.table.selected<-cont.table[cont.clean, samples.found,drop=FALSE]
+  
+  if (mval==TRUE) {
+    cont.table.selected<-cont.table[cont.clean, c(samples.found,'m'),drop=FALSE]
+  } else {
+    cont.table.selected<-cont.table[cont.clean, samples.found,drop=FALSE]
+  }
+ 
+  
   cont.matrix<-as.matrix(cont.table.selected)
   
   return(list("Contrasts.table"=cont.table.clean,"Contrasts.matrix"=cont.matrix))
