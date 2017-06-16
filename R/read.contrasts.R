@@ -27,6 +27,7 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   } else {
     mval<-FALSE
   }
+  print(mval)
   
   samples.found<-intersect(samples.all,samples.selected)
   samples.missing<-setdiff(samples.all,samples.found)
