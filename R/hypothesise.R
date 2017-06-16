@@ -67,6 +67,8 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   } else {
     cont.matrix.clean<-cont.matrix[cont.clean,samples.found,drop=FALSE]
   }
+  
+  print(cont.matrix.clean)
 
   
   #rownames(cont.matrix)
