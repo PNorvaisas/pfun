@@ -44,13 +44,13 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     samples.found<-intersect(samples.incontrasts,samples.indata)
   }
   
-  
-  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,samples.found],1, function(x) ( any(x==1) & any(x==-1) ) | any(x==1) ) ]
+  #Find contrasts that have at least one 
+  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,samples.found],1, function(x) any(x!=0) ) ]
   
   #print(cont.use)
   if (length(samples.miss)>0) {
+    #Remove contrasts that use missing samples
     cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
-    #Select contrasts that don't use missing samples
     cont.clean<-intersect(cont.nomiss,cont.use)
   } else {
     cont.clean<-cont.use

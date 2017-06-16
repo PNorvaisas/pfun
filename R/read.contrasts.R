@@ -17,19 +17,20 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   rownames(cont.table)<-cont.table$Contrast
   contrasts<-cont.table$Contrast
   
-  if ('m' %in% colnames(cont.table)){
-    mval<-TRUE
-    cont.table[,'m']<-as.numeric(cont.table[,'m'])
-  } else {
-    mval<-FALSE
-  }
+
   #print(mval)
   
   #Find columns which define samples
   #samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) length(setdiff(x,c('-1','0','1')))==0)]
-  samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) all(!grepl("[:alpha:]",x)))]
+  samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) all(!grepl("[a-zA-Z]",x)))]
   cont.table[,samples.all] <- sapply(cont.table[, samples.all], as.numeric)
   
+  
+  if ('m' %in% samples.all){
+    mval<-TRUE
+  } else {
+    mval<-FALSE
+  }
   samples.all<-setdiff(samples.all,'m')
 
 
