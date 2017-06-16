@@ -18,6 +18,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   #print(samples.incontrasts)
   
   if ('m' %in% samples.incontrasts){
+    print('H0 values found!')
     mval<-TRUE
     samples.incontrasts<-setdiff(samples.incontrasts,'m')
   } else {
