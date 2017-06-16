@@ -23,7 +23,7 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   } else {
     mval<-FALSE
   }
-  print(mval)
+  #print(mval)
   
   #Find columns which define samples
   samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) length(setdiff(x,c('-1','0','1')))==0)]

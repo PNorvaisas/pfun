@@ -17,6 +17,13 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   #print(samples.indata)
   #print(samples.incontrasts)
   
+  if ('m' %in% samples.incontrasts){
+    mval<-TRUE
+    samples.incontrasts<-setdiff(samples.incontrasts,'m')
+  } else {
+    mval<-FALSE
+  }
+  
   if (length( setdiff(samples.indata,samples.incontrasts) )>0 ) {
     #More samples in data
     print('Some of the samples in data not described in contrasts!')
@@ -54,13 +61,18 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   
   lmshape<-subset(lmshape,Sample %in% samples.found)
   
-  cont.matrix.clean<-cont.matrix[cont.clean,samples.found,drop=FALSE]
+  if (mval==TRUE) {
+    cont.matrix.clean<-cont.matrix[cont.clean,c(samples.found,'m'),drop=FALSE]
+  } else {
+    cont.matrix.clean<-cont.matrix[cont.clean,samples.found,drop=FALSE]
+  }
+
   
   #rownames(cont.matrix)
   #print(cont.matrix)
   #print(cont.matrix.clean)
   
-  lmshape$Sample<-factor(lmshape$Sample,levels=colnames(cont.matrix.clean),labels=colnames(cont.matrix.clean))
+  lmshape$Sample<-factor(lmshape$Sample,levels=samples.found,labels=samples.found)
   
   #Fix it to the smallest overlapping set
   
@@ -76,7 +88,12 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     }
     model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
     #Generalised linear hypothesis testing
-    lmod_glht <- glht(model, linfct = cont.matrix.clean)
+    if (mval==TRUE) {
+      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(samples.found)],rhs=cont.matrix.clean[,'m'])
+    } else {
+      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(samples.found)])
+    }
+    
     result<-summary(lmod_glht,test=adjusted("none"))
     res<-ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
     res$Variable<-pr
