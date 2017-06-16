@@ -107,8 +107,9 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   allresults.m<-melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
   allresults<-dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
   allresults<-rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
+  
   if (mval==TRUE){
-    allresults<-merge(allresults,cont.matrix.clean[,c('Contrast','m')],by='Contrast',all.x=TRUE)
+    allresults<-merge(allresults,cont.matrix.clean[,c('m'),drop=FALSE],by.x='Contrast',by.y=0,all.x=TRUE)
     allresults$logFC<-allresults$logFC-allresults$m
     allresults$m<-NULL
   }
