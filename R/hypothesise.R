@@ -11,7 +11,7 @@
 
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
+hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group"){
   grpcol<-gsub("0\\+","",formula)
   groups.indata<-unique(lmshape[,grpcol])
   groups.incontrasts<-colnames(cont.matrix)
