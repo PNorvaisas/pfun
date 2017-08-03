@@ -12,45 +12,46 @@
 
 
 hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
-  samples.indata<-unique(lmshape$Sample)
-  samples.incontrasts<-colnames(cont.matrix)
-  #print(samples.indata)
-  #print(samples.incontrasts)
+  grpcol<-gsub("0\\+","",formula)
+  groups.indata<-unique(lmshape[,grpcol])
+  groups.incontrasts<-colnames(cont.matrix)
+  #print(groups.indata)
+  #print(groups.incontrasts)
   
-  if ('m' %in% samples.incontrasts){
+  if ('m' %in% groups.incontrasts){
     print('H0 values found!')
     mval<-TRUE
-    samples.incontrasts<-setdiff(samples.incontrasts,'m')
+    groups.incontrasts<-setdiff(groups.incontrasts,'m')
   } else {
     mval<-FALSE
   }
   
-  if (length( setdiff(samples.indata,samples.incontrasts) )>0 ) {
-    #More samples in data
-    print('Some of the samples in data not described in contrasts!')
-    samples.nocontrast<-setdiff(samples.indata,samples.incontrasts)
-    samples.found<-intersect(samples.incontrasts,samples.indata)
-    samples.miss<-c()
-  } else if (length(setdiff(samples.incontrasts,samples.indata))>0) {
-    #More samples in contrasts
-    print('Some of the samples in contrasts not described in data!')
-    samples.nocontrast<-c()
-    samples.miss<-setdiff(samples.incontrasts,samples.indata)
-    samples.found<-intersect(samples.incontrasts,samples.indata)
+  if (length( setdiff(groups.indata,groups.incontrasts) )>0 ) {
+    #More groups in data
+    print('Some of the groups in data not described in contrasts!')
+    groups.nocontrast<-setdiff(groups.indata,groups.incontrasts)
+    groups.found<-intersect(groups.incontrasts,groups.indata)
+    groups.miss<-c()
+  } else if (length(setdiff(groups.incontrasts,groups.indata))>0) {
+    #More groups in contrasts
+    print('Some of the groups in contrasts not described in data!')
+    groups.nocontrast<-c()
+    groups.miss<-setdiff(groups.incontrasts,groups.indata)
+    groups.found<-intersect(groups.incontrasts,groups.indata)
   } else {
-    print('All samples from contrasts and data match!')
-    samples.nocontrast<-c()
-    samples.miss<-c()
-    samples.found<-intersect(samples.incontrasts,samples.indata)
+    print('All groups from contrasts and data match!')
+    groups.nocontrast<-c()
+    groups.miss<-c()
+    groups.found<-intersect(groups.incontrasts,groups.indata)
   }
   
   #Find contrasts that have at least one 
-  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,samples.found],1, function(x) any(x!=0) ) ]
+  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,groups.found],1, function(x) any(x!=0) ) ]
   
   #print(cont.use)
-  if (length(samples.miss)>0) {
-    #Remove contrasts that use missing samples
-    cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,samples.miss],1,function(x) all(x==0) )]
+  if (length(groups.miss)>0) {
+    #Remove contrasts that use missing groups
+    cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,groups.miss],1,function(x) all(x==0) )]
     cont.clean<-intersect(cont.nomiss,cont.use)
   } else {
     cont.clean<-cont.use
@@ -60,12 +61,14 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   print('Selected contrasts:')
   print(cont.clean)
   
-  lmshape<-subset(lmshape,Sample %in% samples.found)
+  #lmshape<-subset(lmshape,Sample %in% groups.found)
+  
+  lmshape<-lmshape[lmshape[,grpcol] %in% groups.found,]
   
   if (mval==TRUE) {
-    cont.matrix.clean<-cont.matrix[cont.clean,c(samples.found,'m'),drop=FALSE]
+    cont.matrix.clean<-cont.matrix[cont.clean,c(groups.found,'m'),drop=FALSE]
   } else {
-    cont.matrix.clean<-cont.matrix[cont.clean,samples.found,drop=FALSE]
+    cont.matrix.clean<-cont.matrix[cont.clean,groups.found,drop=FALSE]
   }
   
   print(cont.matrix.clean)
@@ -75,7 +78,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
   #print(cont.matrix)
   #print(cont.matrix.clean)
   
-  lmshape$Sample<-factor(lmshape$Sample,levels=samples.found,labels=samples.found)
+  lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
   
   #Fix it to the smallest overlapping set
   
@@ -92,9 +95,9 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Sample"){
     model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
     #Generalised linear hypothesis testing
     if (mval==TRUE) {
-      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(samples.found)],rhs=cont.matrix.clean[,'m'])
+      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
     } else {
-      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(samples.found)])
+      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)])
     }
     
     result<-summary(lmod_glht,test=adjusted("none"))
