@@ -70,7 +70,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   if(!is.null(dim(weights.mat))){
     weights.mat<-weights.mat[weights.mat[,grpcol] %in% groups.found,]
   }
-  
+  print(dim(weights.mat))
   
   if (mval==TRUE) {
     cont.matrix.clean<-cont.matrix[cont.clean,c(groups.found,'m'),drop=FALSE]
@@ -89,7 +89,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   if(!is.null(dim(weights.mat))){
     weights.mat[,grpcol]<-factor(weights.mat[,grpcol],levels=groups.found,labels=groups.found)
   }
-  
+  print(dim( weights.mat))
   
   #Fix it to the smallest overlapping set
   
