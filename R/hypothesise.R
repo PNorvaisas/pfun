@@ -18,7 +18,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   #print(groups.indata)
   #print(groups.incontrasts)
   
-  if(!is.null(dim(weights))){
+  if(!is.null(dim(weights.mat))){
     print('Using weights!')
   }
   
@@ -67,7 +67,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   
   #lmshape<-subset(lmshape,Sample %in% groups.found)
   lmshape<-lmshape[lmshape[,grpcol] %in% groups.found,]
-  if(is.null(dim(weights.mat))){
+  if(!is.null(dim(weights.mat))){
     weights.mat<-weights.mat[weights.mat[,grpcol] %in% groups.found,]
   }
   
@@ -86,7 +86,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   #print(cont.matrix.clean)
   
   lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
-  if(is.null(dim(weights.mat))){
+  if(!is.null(dim(weights.mat))){
     weights.mat[,grpcol]<-factor(weights.mat[,grpcol],levels=groups.found,labels=groups.found)
   }
   
@@ -104,11 +104,12 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       prec<-precn
     }
     
-    if(is.null(dim(weights))){
-      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
-    } else{
+    if(!is.null(dim(weights.mat))){
       model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape,weights = weights.mat[,pr])
+    } else{
+      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
     }
+      
     #Generalised linear hypothesis testing
     if (mval==TRUE) {
       lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
