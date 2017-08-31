@@ -11,7 +11,7 @@
 
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights=NA){
+hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.mat=NA){
   grpcol<-gsub("0\\+","",formula)
   groups.indata<-unique(lmshape[,grpcol])
   groups.incontrasts<-colnames(cont.matrix)
@@ -63,8 +63,8 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights=NA
   
   #lmshape<-subset(lmshape,Sample %in% groups.found)
   lmshape<-lmshape[lmshape[,grpcol] %in% groups.found,]
-  if(is.null(dim(weights))){
-    weights<-weights[weights[,grpcol] %in% groups.found,]
+  if(is.null(dim(weights.mat))){
+    weights.mat<-weights.mat[weights.mat[,grpcol] %in% groups.found,]
   }
   
   
@@ -82,8 +82,8 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights=NA
   #print(cont.matrix.clean)
   
   lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
-  if(!is.na(weights)){
-    weights[,grpcol]<-factor(weights[,grpcol],levels=groups.found,labels=groups.found)
+  if(is.null(dim(weights.mat))){
+    weights.mat[,grpcol]<-factor(weights.mat[,grpcol],levels=groups.found,labels=groups.found)
   }
   
   
@@ -103,7 +103,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights=NA
     if(is.null(dim(weights))){
       model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
     } else{
-      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape,weights = weights[,pr])
+      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape,weights = weights.mat[,pr])
     }
     #Generalised linear hypothesis testing
     if (mval==TRUE) {

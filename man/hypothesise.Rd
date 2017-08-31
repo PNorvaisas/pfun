@@ -5,7 +5,7 @@
 \title{Linear Hypothesis Testing in HT manner}
 \usage{
 hypothesise(lmshape, variables, cont.matrix, formula = "0+Group",
-  weights = NA)
+  weights.mat = NA)
 }
 \arguments{
 \item{lmshape}{Table containing samples in rows and variables in columns}
