@@ -98,19 +98,19 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   len<-length(variables)
   for (id in 1:length(variables)) {
     pr<-as.character(variables[id])
-    print(pr)
+    #print(pr)
     precn<-id*100/len
     if (precn-prec>5) {
       print(paste(round(precn,digits=0),'%',sep=''))
       prec<-precn
     }
-    print(weights.mat[,pr])
+    #print(weights.mat[,pr])
     
     
     if(!is.null(dim(weights.mat))){
-      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape,weights = weights.mat[,pr])
+      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[,pr])
     } else{
-      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
+      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape)
     }
       
     #Generalised linear hypothesis testing
