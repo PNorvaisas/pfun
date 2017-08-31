@@ -98,6 +98,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   len<-length(variables)
   for (id in 1:length(variables)) {
     pr<-as.character(variables[id])
+    print(pr)
     precn<-id*100/len
     if (precn-prec>5) {
       print(paste(round(precn,digits=0),'%',sep=''))
