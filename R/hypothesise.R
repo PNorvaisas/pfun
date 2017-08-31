@@ -11,7 +11,7 @@
 
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group"){
+hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights=NA){
   grpcol<-gsub("0\\+","",formula)
   groups.indata<-unique(lmshape[,grpcol])
   groups.incontrasts<-colnames(cont.matrix)
@@ -62,8 +62,11 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group"){
   print(cont.clean)
   
   #lmshape<-subset(lmshape,Sample %in% groups.found)
-  
   lmshape<-lmshape[lmshape[,grpcol] %in% groups.found,]
+  if(!is.na(weights)){
+    weights<-weights[weights[,grpcol] %in% groups.found,]
+  }
+  
   
   if (mval==TRUE) {
     cont.matrix.clean<-cont.matrix[cont.clean,c(groups.found,'m'),drop=FALSE]
@@ -79,6 +82,10 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group"){
   #print(cont.matrix.clean)
   
   lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
+  if(!is.na(weights)){
+    weights[,grpcol]<-factor(weights[,grpcol],levels=groups.found,labels=groups.found)
+  }
+  
   
   #Fix it to the smallest overlapping set
   
@@ -92,7 +99,12 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group"){
       print(paste(round(precn,digits=0),'%',sep=''))
       prec<-precn
     }
-    model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
+    
+    if(is.na(weights)){
+      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape)
+    } else{
+      model<-lm(paste("`",pr,"`~",formula,sep=""),lmshape,weights = weights[,pr])
+    }
     #Generalised linear hypothesis testing
     if (mval==TRUE) {
       lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
