@@ -18,6 +18,10 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   #print(groups.indata)
   #print(groups.incontrasts)
   
+  if(!is.null(dim(weights))){
+    print('Using weights!')
+  }
+  
   if ('m' %in% groups.incontrasts){
     print('H0 values found!')
     mval<-TRUE
