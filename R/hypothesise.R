@@ -104,7 +104,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       print(paste(round(precn,digits=0),'%',sep=''))
       prec<-precn
     }
-    #print(weights.mat[,pr])
+    print(weights.mat[,pr])
     
     
     if(!is.null(dim(weights.mat))){
