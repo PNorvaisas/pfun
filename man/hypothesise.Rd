@@ -4,7 +4,7 @@
 \alias{hypothesise}
 \title{Linear Hypothesis Testing in HT manner}
 \usage{
-hypothesise(lmshape, variables, cont.matrix, fml = "0+Group",
+hypothesise(lmshape, variables, cont.matrix, formula = "0+Group",
   weights.mat = NA)
 }
 \arguments{
