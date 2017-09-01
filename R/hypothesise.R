@@ -111,7 +111,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       print("Using weights test!")
       print(dim(weights.mat))
       print(paste("`",pr,"`~",formula,sep=""))
-      model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape, weights=weights.mat[,pr,drop=FALSE])
+      model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape, weights=weights.mat[,pr])
     } else{
       model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape)
     }
