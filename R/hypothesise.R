@@ -108,7 +108,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
     
     
     if(!is.null(dim(weights.mat))){
-      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[,pr,drop=FALSE])
+      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[,paste(pr)])
     } else{
       model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape)
     }
