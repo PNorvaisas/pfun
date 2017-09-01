@@ -104,11 +104,12 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       print(paste(round(precn,digits=0),'%',sep=''))
       prec<-precn
     }
-    print(weights.mat[,pr])
     
+    print(dim(lmshape))
+    print(dim(weights.mat))
     
     if(!is.null(dim(weights.mat))){
-      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[complete.cases(weights.mat[,pr]),pr])
+      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[,pr])#complete.cases(weights.mat[,pr])
     } else{
       model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape)
     }
