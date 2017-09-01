@@ -10,7 +10,7 @@
 #' hypothesise()
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.mat=NA){
+hypothesise<-function(lmshape,variables,cont.matrix,fml="0+Group",weights.mat=NA){
   grpcol<-gsub("0\\+","",fml)
   groups.indata<-unique(lmshape[,grpcol])
   groups.incontrasts<-colnames(cont.matrix)
