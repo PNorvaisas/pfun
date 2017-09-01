@@ -3,7 +3,7 @@
 #' @param lmshape Table containing samples in rows and variables in columns
 #' @param variables Variables to be tested in model
 #' @param cont.matrix Contrast matrix with dummy variables
-#' @param formula Formula that will be used to spread the effects of samples. DEFAULT to "0+Sample"
+#' @param fml Formula that will be used to spread the effects of samples. DEFAULT to "0+Group"
 #' @keywords hypothesise
 #' @export
 #' @examples
@@ -11,8 +11,8 @@
 
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.mat=NA){
-  grpcol<-gsub("0\\+","",formula)
+hypothesise<-function(lmshape,variables,cont.matrix,fml="0+Group",weights.mat=NA){
+  grpcol<-gsub("0\\+","",fml)
   groups.indata<-unique(lmshape[,grpcol])
   groups.incontrasts<-colnames(cont.matrix)
   #print(groups.indata)
@@ -109,9 +109,11 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
     print(dim(weights.mat))
     
     if(!is.null(dim(weights.mat))){
-      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape,weights = weights.mat[,pr])#complete.cases(weights.mat[,pr])
+      print("Using weights test!")
+      print(dim(weights.mat))
+      model<-lm(formula=paste("`",pr,"`~",fml,sep=""), data=lmshape, weights=weights.mat[,pr])
     } else{
-      model<-lm(formula=paste("`",pr,"`~",formula,sep=""),data=lmshape)
+      model<-lm(formula=paste("`",pr,"`~",fml,sep=""), data=lmshape)
     }
       
     #Generalised linear hypothesis testing

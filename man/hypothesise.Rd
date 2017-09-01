@@ -4,7 +4,7 @@
 \alias{hypothesise}
 \title{Linear Hypothesis Testing in HT manner}
 \usage{
-hypothesise(lmshape, variables, cont.matrix, formula = "0+Group",
+hypothesise(lmshape, variables, cont.matrix, fml = "0+Group",
   weights.mat = NA)
 }
 \arguments{
@@ -14,7 +14,7 @@ hypothesise(lmshape, variables, cont.matrix, formula = "0+Group",
 
 \item{cont.matrix}{Contrast matrix with dummy variables}
 
-\item{formula}{Formula that will be used to spread the effects of samples. DEFAULT to "0+Sample"}
+\item{fml}{Formula that will be used to spread the effects of samples. DEFAULT to "0+Group"}
 }
 \description{
 Linear Hypothesis Testing in HT manner
