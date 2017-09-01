@@ -104,9 +104,6 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       prec<-precn
     }
     
-    print(dim(lmshape))
-    print(dim(weights.mat))
-    
     if(!is.null(dim(weights.mat))){
       model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape, weights=weights.mat[,pr])
     } else{
