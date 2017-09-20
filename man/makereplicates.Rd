@@ -12,7 +12,4 @@ makereplicates(data)
 \description{
 Make a vector with unique replicate indexes
 }
-\examples{
-hypothesise()
-}
 \keyword{makereplicates}

@@ -4,7 +4,6 @@
 #' @keywords makereplicates
 #' @export
 #' @examples
-#' hypothesise()
 
 
 
