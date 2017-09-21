@@ -4,7 +4,7 @@
 #' @keywords makereplicates
 #' @export
 #' @examples
-
+#'
 
 
 makereplicates<-function(data){
