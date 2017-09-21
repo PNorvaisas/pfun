@@ -12,8 +12,7 @@
 #'
 
 enrichment<-function(data,terms,IDs,comparisons,change,sign){
-  allIDs<-length(unique(data[,IDs]))
-  
+  #allIDs<-length(unique(data[,IDs]))
   data.sum<-ddply(data,c(terms,comparisons),here(summarise),
                   Term_total=length(get(IDs)),
                   All=sum(get(sign)<0.05, na.rm = TRUE),
@@ -30,7 +29,7 @@ enrichment<-function(data,terms,IDs,comparisons,change,sign){
   data.tm<-melt(data.total,measure.vars=c('All','Up','Down'),variable.name='Test',value.name = 'Comparison')
   data.c<-merge(data.m,data.tm,by=c(comparisons,'Test'),all.x=TRUE)
   
-  data.c$p<-phyper(data.c$Term-1,data.c$Comparison,allIDs-data.c$Comparison,data.c$Term_total,lower.tail=FALSE)
+  data.c$p<-phyper(data.c$Term-1,data.c$Comparison,data.c$Comparison_total-data.c$Comparison,data.c$Term_total,lower.tail=FALSE)
   data.c<-ddply(data.c,c(comparisons,'Test'),here(mutate),FDR=p.adjust(p,method='fdr'))
   return(data.c)  
 }
