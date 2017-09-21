@@ -16,20 +16,20 @@ enrichment<-function(data,terms,IDs,comparisons,change,sign){
   
   data.sum<-ddply(data,c(terms,comparisons),here(summarise),
                   Term_total=length(get(IDs)),
-                  Sig=sum(get(sign)<0.05, na.rm = TRUE),
-                  Up_sig=sum(get(sign)<0.05 & get(change)>0, na.rm = TRUE),
-                  Down_sig=sum(get(sign)<0.05 & get(change)<0, na.rm = TRUE)
+                  All=sum(get(sign)<0.05, na.rm = TRUE),
+                  Up=sum(get(sign)<0.05 & get(change)>0, na.rm = TRUE),
+                  Down=sum(get(sign)<0.05 & get(change)<0, na.rm = TRUE)
   )
   data.total<-ddply(data,c(comparisons),here(summarise),
-                    Sig=sum(get(sign)<0.05 & !duplicated(get(IDs)),na.rm = TRUE),
-                    Up_sig=sum(get(sign)<0.05 & get(change)>0 & !duplicated(get(IDs)), na.rm = TRUE),
-                    Down_sig=sum(get(sign)<0.05 & get(change)<0 & !duplicated(get(IDs)), na.rm = TRUE)
+                    All=sum(get(sign)<0.05 & !duplicated(get(IDs)),na.rm = TRUE),
+                    Up=sum(get(sign)<0.05 & get(change)>0 & !duplicated(get(IDs)), na.rm = TRUE),
+                    Down=sum(get(sign)<0.05 & get(change)<0 & !duplicated(get(IDs)), na.rm = TRUE)
   )
-  data.m<-melt(data.sum,measure.vars=c('Sig','Up_sig','Down_sig'),variable.name='Test',value.name = 'Term_sig')
-  data.tm<-melt(data.total,measure.vars=c('Sig','Up_sig','Down_sig'),variable.name='Test',value.name = 'Comparison_sig')
+  data.m<-melt(data.sum,measure.vars=c('All','Up','Down'),variable.name='Test',value.name = 'Term')
+  data.tm<-melt(data.total,measure.vars=c('All','Up','Down'),variable.name='Test',value.name = 'Comparison')
   data.c<-merge(data.m,data.tm,by=c(comparisons,'Test'),all.x=TRUE)
   
-  data.c$p<-phyper(data.c$Term_sig-1,data.c$Comparison_sig,allIDs-data.c$Comparison_sig,data.c$Term_total,lower.tail=FALSE)
+  data.c$p<-phyper(data.c$Term-1,data.c$Comparison,allIDs-data.c$Comparison,data.c$Term_total,lower.tail=FALSE)
   data.c<-ddply(data.c,c(comparisons,'Test'),here(mutate),FDR=p.adjust(p,method='fdr'))
   return(data.c)  
 }
