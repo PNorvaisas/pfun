@@ -4,20 +4,20 @@
 \alias{enrichment}
 \title{Calculate enrichment}
 \usage{
-enrichment(data, term, IDs, comparisons, change, sign)
+enrichment(data, terms, IDs, comparisons, change, sign)
 }
 \arguments{
 \item{data}{Table with data}
 
-\item{term}{Column containing terms to calculate enrichment for}
-
-\item{IDs}{Column with IDs of entities that each term contains}
+\item{IDs}{Columns with IDs of entities that each term contains}
 
 \item{comparisons}{Column containing differnet comparisons that will be tested}
 
 \item{change}{Column containing value for direction of change}
 
 \item{sign}{Column containing significance of change}
+
+\item{term}{Columns containing terms to calculate enrichment for}
 }
 \description{
 Calculate enrichment

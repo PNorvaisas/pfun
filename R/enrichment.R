@@ -1,8 +1,8 @@
 #' Calculate enrichment
 #'
 #' @param data Table with data
-#' @param term Column containing terms to calculate enrichment for
-#' @param IDs Column with IDs of entities that each term contains
+#' @param term Columns containing terms to calculate enrichment for
+#' @param IDs Columns with IDs of entities that each term contains
 #' @param comparisons Column containing differnet comparisons that will be tested
 #' @param change Column containing value for direction of change
 #' @param sign Column containing significance of change
@@ -11,10 +11,10 @@
 #' @examples
 #'
 
-enrichment<-function(data,term,IDs,comparisons,change,sign){
+enrichment<-function(data,terms,IDs,comparisons,change,sign){
   allIDs<-length(unique(data[,IDs]))
   
-  data.sum<-ddply(data,c(term,comparisons),here(summarise),
+  data.sum<-ddply(data,c(terms,comparisons),here(summarise),
                   Term_total=length(get(IDs)),
                   Sig=sum(get(sign)<0.05, na.rm = TRUE),
                   Up_sig=sum(get(sign)<0.05 & get(change)>0, na.rm = TRUE),
