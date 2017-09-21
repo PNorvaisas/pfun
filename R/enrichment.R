@@ -21,6 +21,7 @@ enrichment<-function(data,terms,IDs,comparisons,change,sign){
                   Down=sum(get(sign)<0.05 & get(change)<0, na.rm = TRUE)
   )
   data.total<-ddply(data,c(comparisons),here(summarise),
+                    Comparison_total=length(get(IDs)),
                     All=sum(get(sign)<0.05 & !duplicated(get(IDs)),na.rm = TRUE),
                     Up=sum(get(sign)<0.05 & get(change)>0 & !duplicated(get(IDs)), na.rm = TRUE),
                     Down=sum(get(sign)<0.05 & get(change)<0 & !duplicated(get(IDs)), na.rm = TRUE)
