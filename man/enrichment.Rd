@@ -22,4 +22,7 @@ enrichment(data, term, IDs, comparisons, change, sign)
 \description{
 Calculate enrichment
 }
+\examples{
+
+}
 \keyword{enrichment}

@@ -9,7 +9,7 @@
 #' @keywords enrichment
 #' @export
 #' @examples
-
+#'
 
 enrichment<-function(data,term,IDs,comparisons,change,sign){
   allIDs<-length(unique(data[,IDs]))
