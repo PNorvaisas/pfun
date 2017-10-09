@@ -13,10 +13,10 @@
 contrast.adjust<-function(contrasts.matrix,contrasts.table,adjustments.list,data,suffix='') {
   for (a in adjustments.list){
     print(a)
-    contrast<-contrasts.matrix[a,]
+    selcontrast<-contrasts.matrix[a,]
     
-    ref<-names(contrast[contrast==-1])
-    targ<-names(contrast[contrast==1])
+    ref<-names(selcontrast[selcontrast==-1])
+    targ<-names(selcontrast[selcontrast==1])
     
     targ.str<-paste0(targ,suffix,collapse='+')
     ref.str<-paste0(ref,suffix,collapse='+')
