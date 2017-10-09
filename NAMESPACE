@@ -2,7 +2,7 @@
 
 S3method(contrast,adjust)
 export(enrichment)
-export(enrichmentmelt)
+export(enrichment.melt)
 export(hypothesise)
 export(makereplicates)
 export(read.and.clean)
