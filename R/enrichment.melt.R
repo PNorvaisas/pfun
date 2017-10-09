@@ -13,7 +13,7 @@ enrichment.melt<-function(data,idvariables,selstats){
   for (s in selstats) {
     statcols<-c(statcols,colnames(data)[grepl(paste0('_',s),colnames(data))])
   }
-  data.m<-melt(data,id.vars=idvariables,measure.vars = statcols,
+  data.m<-reshape2::melt(data,id.vars=idvariables,measure.vars = statcols,
                variable.name = 'Column',value.name = 'Value')
   
   data.m$Contrast<-gsub(paste0('_',paste0(selstats,collapse = '|_')),'',data.m$Column,fixed=FALSE)
