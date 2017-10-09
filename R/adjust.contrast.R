@@ -5,12 +5,12 @@
 #' @param adjustments.list Contrasts to be adjusted
 #' @param data Data to estimate correlation of contrasts
 #' @param suffix Suffixes added to the Group names
-#' @keywords contrast.adjust
+#' @keywords adjust.contrast
 #' @export
 #' @examples
-#' contrast.adjust()
+#' adjust.contrast()
 
-contrast.adjust<-function(contrasts.matrix,contrasts.table,adjustments.list,data,suffix='') {
+adjust.contrast<-function(contrasts.matrix,contrasts.table,adjustments.list,data,suffix='') {
   for (a in adjustments.list){
     print(a)
     selcontrast<-contrasts.matrix[a,]
