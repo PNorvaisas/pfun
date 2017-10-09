@@ -112,9 +112,9 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       
     #Generalised linear hypothesis testing
     if (mval==TRUE) {
-      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
+      lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
     } else {
-      lmod_glht <- glht(model, linfct = cont.matrix.clean[,c(groups.found)])
+      lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)])
     }
     
     result<-summary(lmod_glht,test=adjusted("none"))
@@ -125,7 +125,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   
   
   allresults.m<-melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
-  allresults<-dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
+  allresults<-reshape2::dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
   allresults<-rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
   
   if (mval==TRUE){
@@ -142,7 +142,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   allresults.m<-melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','NE','PE','t.value','p.value','FDR'),
                      variable.name = 'Stats',value.name = 'Value')
   
-  allresults.castfull<-dcast(allresults.m,Variable~Contrast+Stats,value.var = 'Value')
+  allresults.castfull<-reshape2::dcast(allresults.m,Variable~Contrast+Stats,value.var = 'Value')
   
   allresults.msimple<-subset(allresults.m,Stats %in% c('logFC','FDR'))
   allresults.cast<-dcast(allresults.msimple,Variable~Contrast+Stats,value.var = 'Value')

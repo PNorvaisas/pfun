@@ -27,7 +27,7 @@ contrast.adjust<-function(contrasts.matrix,contrasts.table,adjustments.list,data
     res<-summary(fit)
     
     #outlierTest(genfit)
-    ot<-outlierTest(fit)
+    ot<-car::outlierTest(fit)
     # qqPlot(genfit, main="QQ Plot")
     # 
     outlist<-c(names(ot$rstudent))
