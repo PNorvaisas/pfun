@@ -4,7 +4,7 @@
 \alias{read.contrasts}
 \title{Linear Hypothesis Testing in HT manner}
 \usage{
-read.contrasts(cfile, csheet, samples.selected)
+read.contrasts(cfile, csheet, samples.selected, variables = c())
 }
 \arguments{
 \item{cfile}{Excel file containing standard contrast table}
@@ -12,6 +12,8 @@ read.contrasts(cfile, csheet, samples.selected)
 \item{csheet}{Sheet in Excel file containing contrast table}
 
 \item{samples.selected}{Limit contrasts to selected samples}
+
+\item{variables}{Other variables to preserve in table}
 }
 \description{
 Linear Hypothesis Testing in HT manner

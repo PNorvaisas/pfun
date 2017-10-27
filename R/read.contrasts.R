@@ -3,6 +3,7 @@
 #' @param cfile Excel file containing standard contrast table
 #' @param csheet Sheet in Excel file containing contrast table
 #' @param samples.selected Limit contrasts to selected samples
+#' @param variables Other variables to preserve in table
 #' @keywords read.contrasts contrasts
 #' @export
 #' @examples
@@ -11,7 +12,7 @@
 #' 
 
 
-read.contrasts<-function(cfile,csheet,samples.selected) {
+read.contrasts<-function(cfile,csheet,samples.selected,variables=c()) {
   cont.table<-read.and.clean(cfile,csheet)
   cont.table$`FALSE`<-NULL
   rownames(cont.table)<-cont.table$Contrast
@@ -31,7 +32,7 @@ read.contrasts<-function(cfile,csheet,samples.selected) {
   } else {
     mval<-FALSE
   }
-  samples.all<-setdiff(samples.all,'m')
+  samples.all<-setdiff(samples.all,c('m',variables))
 
 
   
