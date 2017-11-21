@@ -3,6 +3,7 @@
 export(adjust.contrast)
 export(enrichment)
 export(enrichment.melt)
+export(group.filter)
 export(hypothesise)
 export(makereplicates)
 export(read.and.clean)
