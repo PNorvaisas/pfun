@@ -14,7 +14,7 @@ group.filter<-function(dt,thrs) {
   for (gr in groups){
     selection<-data.frame( rowSums( dtcpm[,dt$samples$group==gr] > thrs ) >= sum( dt$samples$group==gr ) )
     colnames(selection)<-gr
-    allkeep <- cbind(allkeep, selection  )
+    allkeep <- cbind(allkeep, selection )
   }
   keep<-apply(allkeep,1,function(x) any(x))
 
