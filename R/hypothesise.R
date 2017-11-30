@@ -141,13 +141,13 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   allresults$FDR<-p.adjust(allresults$p.value,method = 'fdr')
   allresults$logFDR<--log10(allresults$FDR)
 
-  allresults.m<-melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','NE','PE','t.value','p.value','FDR'),
+  allresults.m<-reshape2::melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','NE','PE','t.value','p.value','FDR'),
                      variable.name = 'Stats',value.name = 'Value')
 
   allresults.castfull<-reshape2::dcast(allresults.m,Variable~Contrast+Stats,value.var = 'Value')
 
   allresults.msimple<-subset(allresults.m,Stats %in% c('logFC','FDR'))
-  allresults.cast<-dcast(allresults.msimple,Variable~Contrast+Stats,value.var = 'Value')
+  allresults.cast<-reshape2::dcast(allresults.msimple,Variable~Contrast+Stats,value.var = 'Value')
 
   return(list("All"=allresults,"Cast"=allresults.cast,"Melt"=allresults.m,"CastFull"=allresults.castfull))
 }
