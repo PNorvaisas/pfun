@@ -85,6 +85,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
   #print(cont.matrix.clean)
 
   lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
+
   if(!is.null(dim(weights.mat))){
     weights.mat[,grpcol]<-factor(weights.mat[,grpcol],levels=groups.found,labels=groups.found)
   }
@@ -117,8 +118,8 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)])
     }
 
-    result<-multcomp::summary(lmod_glht,test=adjusted("none"))
-    res<-ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
+    result<-multcomp::summary.glht(lmod_glht,test=adjusted("none"))
+    res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
     res$Variable<-pr
     allresults.t<-rbind(allresults.t,res)
   }
