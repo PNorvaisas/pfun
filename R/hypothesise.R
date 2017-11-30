@@ -119,13 +119,14 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
     }
 
     result<-multcomp:::summary.glht(lmod_glht,test=adjusted("none"))
+
     res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
     res$Variable<-pr
     allresults.t<-rbind(allresults.t,res)
   }
 
 
-  allresults.m<-melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
+  allresults.m<-reshape2::melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
   allresults<-reshape2::dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
   allresults<-rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
 
