@@ -118,7 +118,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
       lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)])
     }
 
-    result<-multcomp:::summary.glht(lmod_glht,test=adjusted("none"))
+    result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
 
     res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
     res$Variable<-pr
