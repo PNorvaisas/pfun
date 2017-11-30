@@ -128,7 +128,7 @@ hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.ma
 
   allresults.m<-reshape2::melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
   allresults<-reshape2::dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
-  allresults<-rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
+  allresults<-plyr::rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
 
   if (mval==TRUE){
     allresults<-merge(allresults,cont.matrix.clean[,c('m'),drop=FALSE],by.x='Contrast',by.y=0,all.x=TRUE)
