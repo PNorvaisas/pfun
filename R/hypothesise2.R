@@ -117,9 +117,9 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
 
   if (mval==TRUE) {
-    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found),drop=FALSE],rhs=cont.matrix.clean[,'m'])
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.clean),drop=FALSE],rhs=cont.matrix.clean[,'m'])
   } else {
-    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found),drop=FALSE])
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.clean),drop=FALSE])
   }
 
   result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
