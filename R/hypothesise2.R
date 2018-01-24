@@ -134,7 +134,7 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   #m adjustment
   if (mval==TRUE){
     allresults<-allresults %>%
-      left_join(cont.matrix.clean[,c('m'),drop=FALSE],by.x='Contrast',by.y=0) %>%
+      left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]),by.x='Contrast',by.y=0) %>%
       mutate(logFC=logFC-m,
              m=NULL)
   }
