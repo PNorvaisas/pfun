@@ -17,8 +17,8 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     #print(unique(as.character(lmdata[,variable])))
   }
 
-  grps<-unlist(strsplit("Conc_log~0+Group",'~'))[2]
-  valvar<-unlist(strsplit("Conc_log~0+Group",'~'))[1]
+  grps<-unlist(strsplit(formula,'~'))[2]
+  valvar<-unlist(strsplit(formula,'~'))[1]
   grpcol<-gsub("0\\+","",grps)
 
 
@@ -116,7 +116,12 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   }
 
 
-  lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean)
+  if (mval==TRUE) {
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found),drop=FALSE],rhs=cont.matrix.clean[,'m'])
+  } else {
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found),drop=FALSE])
+  }
+
   result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
   res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
 
@@ -126,6 +131,7 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     spread(`.id`,Value) %>%
     rename(logFC=coefficients,SE=sigma,p.value=pvalues,t.value=tstat)
 
+  #m adjustment
   if (mval==TRUE){
     allresults<-allresults %>%
       left_join(cont.matrix.clean[,c('m'),drop=FALSE],by.x='Contrast',by.y=0) %>%
