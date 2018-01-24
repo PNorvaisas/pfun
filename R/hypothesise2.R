@@ -10,6 +10,7 @@
 #' hypothesise2()
 
 
+
 hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   if(!is.na(variable)) {
@@ -134,11 +135,12 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   #m adjustment
   if (mval==TRUE){
     allresults<-allresults %>%
-      left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]),by.x='Contrast',by.y=0) %>%
+      left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]) %>% mutate(Contrast=rownames(cont.matrix.clean)) ,by='Contrast') %>%
       mutate(logFC=logFC-m,
              m=NULL)
   }
 
   return(allresults)
 }
+
 
