@@ -13,8 +13,8 @@
 
 
 read.contrasts<-function(cfile,csheet,samples.selected,variables=c()) {
-  cont.table<-readxl::read_xlsx(cfile,sheet=csheet)
-  #cont.table$`FALSE`<-NULL
+  cont.table<-readxl::read_xlsx(cfile,sheet=csheet) %>%
+    data.frame
   rownames(cont.table)<-cont.table$Contrast
   contrasts<-cont.table$Contrast
 
