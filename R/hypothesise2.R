@@ -1,14 +1,14 @@
 #' Linear Hypothesis Testing in HT manner using Dplyr
 #'
 #' @param lmshape Table containing samples in rows and variables in columns
-#' @param variables Variables to be tested in model
-#' @param cont.matrix Contrast matrix with dummy variables
-#' @param fml Formula that will be used to spread the effects of samples. DEFAULT to "0+Group"
+#' @param formula Formula for linear model in the form of "Values~0+Group"
+#' @param cont.matrix Contrast matrix with dummy variables.
+#' @param weights.col Column with weights for observations. Default: NA
+#' @param variables Name of the column with variables to print. Default: NA
 #' @keywords hypothesise
 #' @export
 #' @examples
 #' hypothesise2()
-
 
 
 hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
@@ -105,10 +105,15 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   }
 
   print(cont.matrix.clean)
+  print(groups.clean)
 
-  lmdata<-lmdata%>%
+  lmdata<-lmdata %>%
     filter_(paste0(grpcol,"%in% groups.clean")) %>%
-    mutate_(paste0(grpcol,"=factor(",grpcol,",levels=groups.clean,labels=groups.clean)"))
+    mutate_(.dots=setNames(paste0("factor(",grpcol,",levels=groups.clean,labels=groups.clean)"),grpcol))
+
+
+  print(lmdata)
+  print(quote(factor(grpcol,levels=groups.clean,labels=groups.clean)))
 
   if(!is.null(dim(weights.col))){
     model<-lm(as.formula(formula), data=lmdata, weights=weights.col)

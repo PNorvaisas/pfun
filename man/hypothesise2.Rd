@@ -7,13 +7,15 @@
 hypothesise2(lmdata, formula, cont.matrix, weights.col = NA, variable = NA)
 }
 \arguments{
-\item{cont.matrix}{Contrast matrix with dummy variables}
+\item{formula}{Formula for linear model in the form of "Values~0+Group"}
+
+\item{cont.matrix}{Contrast matrix with dummy variables.}
+
+\item{weights.col}{Column with weights for observations. Default: NA}
 
 \item{lmshape}{Table containing samples in rows and variables in columns}
 
-\item{variables}{Variables to be tested in model}
-
-\item{fml}{Formula that will be used to spread the effects of samples. DEFAULT to "0+Group"}
+\item{variables}{Name of the column with variables to print. Default: NA}
 }
 \description{
 Linear Hypothesis Testing in HT manner using Dplyr
