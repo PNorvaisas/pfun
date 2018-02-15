@@ -105,15 +105,12 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   }
 
   print(cont.matrix.clean)
-  print(groups.clean)
+  #print(groups.clean)
 
   lmdata<-lmdata %>%
     filter_(paste0(grpcol,"%in% groups.clean")) %>%
     mutate_(.dots=setNames(paste0("factor(",grpcol,",levels=groups.clean,labels=groups.clean)"),grpcol))
 
-
-  print(lmdata)
-  print(quote(factor(grpcol,levels=groups.clean,labels=groups.clean)))
 
   if(!is.null(dim(weights.col))){
     model<-lm(as.formula(formula), data=lmdata, weights=weights.col)
@@ -129,21 +126,19 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   }
 
   result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
-  res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
+  allresults<-data.frame(result$test[c('coefficients','sigma','tstat','pvalues')],m=result$rhs) %>%
+    rownames_to_column('Contrast') %>%
+    rename(logFC=coefficients,SE=sigma,p.value=pvalues,t.value=tstat) %>%
+    mutate(logFC=logFC-m,
+           m=NULL)
 
-
-  allresults<-res %>%
-    gather(Contrast,Value,-`.id`) %>%
-    spread(`.id`,Value) %>%
-    rename(logFC=coefficients,SE=sigma,p.value=pvalues,t.value=tstat)
-
-  #m adjustment
-  if (mval==TRUE){
-    allresults<-allresults %>%
-      left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]) %>% mutate(Contrast=rownames(cont.matrix.clean)) ,by='Contrast') %>%
-      mutate(logFC=logFC-m,
-             m=NULL)
-  }
+  # #m adjustment
+  # if (mval==TRUE){
+  #   allresults<-allresults %>%
+  #     left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]) %>% mutate(Contrast=rownames(cont.matrix.clean)) ,by='Contrast') %>%
+  #     mutate(logFC=logFC-m,
+  #            m=NULL)
+  # }
 
   return(allresults)
 }
