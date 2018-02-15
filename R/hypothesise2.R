@@ -10,7 +10,6 @@
 #' @examples
 #' hypothesise2()
 
-
 hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   if(!is.na(variable)) {
@@ -39,7 +38,6 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   #print(groups.indata)
   #print(groups.incontrasts)
-
 
   #Remember m column, but remove it from matrix
   if ('m' %in% groups.incontrasts){
@@ -130,7 +128,6 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     rename(logFC=coefficients,SE=sigma,p.value=pvalues,t.value=tstat) %>%
     mutate(logFC=logFC-m,
            m=NULL)
-
 
   return(allresults)
 }
