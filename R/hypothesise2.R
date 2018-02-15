@@ -118,7 +118,6 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     model<-lm(as.formula(formula), data=lmdata)
   }
 
-
   if (mval==TRUE) {
     lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.clean),drop=FALSE],rhs=cont.matrix.clean[,'m'])
   } else {
@@ -132,13 +131,6 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     mutate(logFC=logFC-m,
            m=NULL)
 
-  # #m adjustment
-  # if (mval==TRUE){
-  #   allresults<-allresults %>%
-  #     left_join(data.frame(cont.matrix.clean[,c('m'),drop=FALSE]) %>% mutate(Contrast=rownames(cont.matrix.clean)) ,by='Contrast') %>%
-  #     mutate(logFC=logFC-m,
-  #            m=NULL)
-  # }
 
   return(allresults)
 }
