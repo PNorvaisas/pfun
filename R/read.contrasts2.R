@@ -16,7 +16,6 @@
 read.contrasts2<-function(cfile,csheet=1) {
   cont.table<-readxl::read_xlsx(cfile,sheet=csheet) %>%
     data.frame
-  rownames(cont.table)<-cont.table$Contrast
   contrasts<-cont.table$Contrast
   
   descriptions<-colnames(cont.table)[1:match('Reference',colnames(cont.table))]
@@ -33,6 +32,9 @@ read.contrasts2<-function(cfile,csheet=1) {
   cont.matrix<-cont.table %>%
     select(samples.all) %>%
     as.matrix
+  
+  #rownames(cont.table.clean)<-contrasts
+  rownames(cont.matrix)<-contrasts
   
   return(list("Contrasts.table"=cont.table.clean,"Contrasts.matrix"=cont.matrix))
 }
