@@ -5,12 +5,12 @@
 \title{Get contrasts for Linear Hypothesis Testing in HT manner.
 Works with hypothesise2}
 \usage{
-read.contrasts2(cfile, csheet)
+read.contrasts2(cfile, csheet = 1)
 }
 \arguments{
 \item{cfile}{Excel file containing standard contrast table}
 
-\item{csheet}{Sheet in Excel file containing contrast table}
+\item{csheet}{Sheet in Excel file containing contrast table. Default: First sheet}
 
 \item{samples.selected}{Limit contrasts to selected samples}
 
