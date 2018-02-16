@@ -23,11 +23,16 @@ read.contrasts2<-function(cfile,csheet=1) {
   
   samples.all<-setdiff(colnames(cont.table),descriptions)
                        
-  cont.table[,samples.all] <- sapply(cont.table[, samples.all], as.numeric)
+  cont.table<-cont.table %>%
+    mutate_at(samples.all, as.numeric)
   
-  cont.table.clean<-cont.table[,descriptions,drop=FALSE]
+  cont.table.clean<-cont.table %>%
+    select(descriptions) %>%
+    mutate_all(as.factor)
 
-  cont.matrix<-as.matrix(cont.table[, samples.all,drop=FALSE])
+  cont.matrix<-cont.table %>%
+    select(samples.all) %>%
+    as.matrix
   
   return(list("Contrasts.table"=cont.table.clean,"Contrasts.matrix"=cont.matrix))
 }
