@@ -2,7 +2,7 @@
 #' Works with hypothesise2
 #' 
 #' @param cfile Excel file containing standard contrast table
-#' @param csheet Sheet in Excel file containing contrast table
+#' @param csheet Sheet in Excel file containing contrast table. Default: 'Contrasts_values'
 #' @param samples.selected Limit contrasts to selected samples
 #' @param variables Variables to preserve in the table
 #' @keywords read.contrasts contrasts
@@ -13,7 +13,7 @@
 #'
 
 
-read.contrasts2<-function(cfile,csheet) {
+read.contrasts2<-function(cfile,csheet='Contrasts_values') {
   cont.table<-readxl::read_xlsx(cfile,sheet=csheet) %>%
     data.frame
   rownames(cont.table)<-cont.table$Contrast
