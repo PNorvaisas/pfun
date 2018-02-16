@@ -2,7 +2,8 @@
 % Please edit documentation in R/read.contrasts.R
 \name{read.contrasts}
 \alias{read.contrasts}
-\title{Linear Hypothesis Testing in HT manner}
+\title{Get contrasts for Linear Hypothesis Testing in HT manner
+Works with hypothesise}
 \usage{
 read.contrasts(cfile, csheet, samples.selected, variables = c())
 }
@@ -16,7 +17,8 @@ read.contrasts(cfile, csheet, samples.selected, variables = c())
 \item{variables}{Other variables to preserve in table}
 }
 \description{
-Linear Hypothesis Testing in HT manner
+Get contrasts for Linear Hypothesis Testing in HT manner
+Works with hypothesise
 }
 \examples{
 read.contrasts()

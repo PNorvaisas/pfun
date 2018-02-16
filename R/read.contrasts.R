@@ -1,4 +1,5 @@
-#' Linear Hypothesis Testing in HT manner
+#' Get contrasts for Linear Hypothesis Testing in HT manner
+#' Works with hypothesise
 #'
 #' @param cfile Excel file containing standard contrast table
 #' @param csheet Sheet in Excel file containing contrast table
@@ -23,17 +24,23 @@ read.contrasts<-function(cfile,csheet,samples.selected,variables=c()) {
 
   #Find columns which define samples
   #samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) length(setdiff(x,c('-1','0','1')))==0)]
+
+
+
   samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) all(!grepl("[a-zA-Z]",x)))]
+
+
+
   cont.table[,samples.all] <- sapply(cont.table[, samples.all], as.numeric)
 
 
-  if ('m' %in% samples.all){
+  if ('m' %in% colnames(cont.table) ){
     mval<-TRUE
   } else {
     mval<-FALSE
   }
-  samples.all<-setdiff(samples.all,c('m',variables))
 
+  samples.all<-setdiff(samples.all,c('m',variables))
 
 
   samples.found<-intersect(samples.all,samples.selected)
