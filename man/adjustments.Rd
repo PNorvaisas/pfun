@@ -6,9 +6,6 @@
 \usage{
 adjustments(data)
 }
-\arguments{
-\item{data}{}
-}
 \description{
 Expand output of GLHT, calculate FDR
 }
