@@ -31,7 +31,7 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     filter(Observations>0)
 
 
-  print(lmcompleteness)
+  #print(lmcompleteness)
 
   groups.indata<-as.character(unique(lmcomplete[,grpcol]))
   groups.incontrasts<-colnames(cont.matrix)
@@ -102,7 +102,7 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
     return(data.frame())
   }
 
-  print(cont.matrix.clean)
+  #print(cont.matrix.clean)
   #print(groups.clean)
 
   lmdata<-lmdata %>%
