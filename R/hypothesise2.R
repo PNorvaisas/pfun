@@ -10,7 +10,7 @@
 #' @examples
 #' hypothesise2()
 
-hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
+hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA,verbose=FALSE) {
 
   if(!is.na(variable)) {
     print(unique(lmdata[,variable]))
@@ -30,8 +30,10 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   lmcomplete<-lmcompleteness %>%
     filter(Observations>0)
 
+  if (verbose){
+    print(lmcompleteness)
+  }
 
-  #print(lmcompleteness)
 
   groups.indata<-as.character(unique(lmcomplete[,grpcol]))
   groups.incontrasts<-colnames(cont.matrix)
@@ -41,7 +43,10 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   #Remember m column, but remove it from matrix
   if ('m' %in% groups.incontrasts){
-    #print('H0 values found!')
+    if (verbose){
+      print('H0 values found!')
+    }
+
     mval<-TRUE
     groups.incontrasts<-base::setdiff(groups.incontrasts,'m')
   } else {
@@ -50,18 +55,24 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   if (length( base::setdiff(groups.indata,groups.incontrasts) )>0 ) {
     #More groups in data
-    print('Some of the groups in data not described in contrasts!')
+    if (verbose){
+      print('Some of the groups in data not described in contrasts!')
+    }
     groups.nocontrast<-base::setdiff(groups.indata,groups.incontrasts)
     groups.found<-intersect(groups.incontrasts,groups.indata)
     groups.miss<-c()
   } else if (length(base::setdiff(groups.incontrasts,groups.indata))>0) {
     #More groups in contrasts
-    print('Some of the groups in contrasts not described in data!')
+    if (verbose){
+      print('Some of the groups in contrasts not described in data!')
+    }
     groups.nocontrast<-c()
     groups.miss<-base::setdiff(groups.incontrasts,groups.indata)
     groups.found<-intersect(groups.incontrasts,groups.indata)
   } else {
-    print('All groups from contrasts and data match!')
+    if (verbose){
+      print('All groups from contrasts and data match!')
+    }
     groups.nocontrast<-c()
     groups.miss<-c()
     groups.found<-intersect(groups.incontrasts,groups.indata)
@@ -76,6 +87,7 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
   } else {
     cont.remove<-c()
   }
+
   #print(cont.remove)
   #cont.miss<-rownames(cont.matrix)[ apply(cont.matrix[,groups.found,drop=FALSE],1, function(x) any(x!=0) ) ]
 
@@ -98,11 +110,15 @@ hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA) {
 
   #If no complete contrasts left - skip
   if(sum(dim(cont.matrix.clean))<2 ){
-    print("No comparisons to make!")
+    if (verbose){
+      print("No comparisons to make!")
+    }
     return(data.frame())
   }
 
-  #print(cont.matrix.clean)
+  if (verbose){
+   print(cont.matrix.clean)
+  }
   #print(groups.clean)
 
   lmdata<-lmdata %>%

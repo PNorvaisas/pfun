@@ -4,7 +4,8 @@
 \alias{hypothesise2}
 \title{Linear Hypothesis Testing in HT manner using Dplyr}
 \usage{
-hypothesise2(lmdata, formula, cont.matrix, weights.col = NA, variable = NA)
+hypothesise2(lmdata, formula, cont.matrix, weights.col = NA, variable = NA,
+  verbose = FALSE)
 }
 \arguments{
 \item{formula}{Formula for linear model in the form of "Values~0+Group"}
