@@ -1,6 +1,6 @@
 #' Expand output of GLHT, calculate FDR
 #'
-#' @param data
+#' @param data Data from hypothesise2
 #' @keywords FDR, pStars
 #' @export
 #' @examples

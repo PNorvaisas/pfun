@@ -1,6 +1,6 @@
 #' Get formated results from LM dataset
 #'
-#' @param data LM output (do not ungroup it!)
+#' @param data LM hypothesise output (do not ungroup it!)
 #' @param contrasts.desc Contrast descriptors
 #' @keywords results
 #' @export

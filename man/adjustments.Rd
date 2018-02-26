@@ -6,6 +6,9 @@
 \usage{
 adjustments(data)
 }
+\arguments{
+\item{data}{Data from hypothesise2}
+}
 \description{
 Expand output of GLHT, calculate FDR
 }

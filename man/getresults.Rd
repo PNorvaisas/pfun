@@ -7,7 +7,7 @@
 getresults(data, contrasts.desc)
 }
 \arguments{
-\item{data}{LM output (do not ungroup it!)}
+\item{data}{LM hypothesise output (do not ungroup it!)}
 
 \item{contrasts.desc}{Contrast descriptors}
 }
