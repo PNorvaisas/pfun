@@ -54,8 +54,6 @@ getresults<-function(data,contrasts.desc,groupings=c()) {
     select(grp.vars,everything())
 
 
-
-
   return(list('results'=results,
               'cast'=results.cast,
               'castfull'=results.castfull,
