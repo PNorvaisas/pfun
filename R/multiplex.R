@@ -25,7 +25,7 @@ multiplex<-function(data,groups,dims=3){
 
   for (join in 1:joins){
     #print(join)
-    data.multi<-data %>%
+    data.multi<-data.multi %>%
       full_join(data %>%
                   rename_(.dots = setNames(cnt.vals, paste0(axes[join],cnt.vals))))
   }
