@@ -4,7 +4,7 @@
 \alias{getresults}
 \title{Get formated results from LM dataset}
 \usage{
-getresults(data, contrasts.desc)
+getresults(data, contrasts.desc, groupings = c())
 }
 \arguments{
 \item{data}{LM hypothesise output (do not ungroup it!)}

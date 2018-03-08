@@ -8,9 +8,9 @@
 #'
 #'
 
-adjustments<-function(data){
+adjustments<-function(data,groupings=c()){
   data %>%
-    group_by(Contrast) %>%
+    group_by_(c("Contrast",groupings) ) %>%
     mutate(FDR=p.adjust(p.value,method = 'fdr'),
            pStars=pStars(p.value),
            FDRStars=pStars(FDR),

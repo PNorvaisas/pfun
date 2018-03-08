@@ -4,7 +4,7 @@
 \alias{adjustments}
 \title{Expand output of GLHT, calculate FDR}
 \usage{
-adjustments(data)
+adjustments(data, groupings = c())
 }
 \arguments{
 \item{data}{Data from hypothesise2}
