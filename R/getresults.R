@@ -43,15 +43,16 @@ getresults<-function(data,contrasts.desc,groupings=c()) {
     mutate_at(vars(-contains('Stars'),-one_of(grp.vars)),as.numeric)
 
 
-  cnt.vals<-base::setdiff(colnames(results),c(cnt.vars,grp.vars))
+  results.multi<-multiplex(results,c(cnt.vars,grp.vars),3)
 
-  results.multi<-results %>%
-    rename_(.dots = setNames(cnt.vals, paste0('x_',cnt.vals))) %>%
-    full_join(results %>%
-                rename_(.dots = setNames(cnt.vals, paste0('y_',cnt.vals)))) %>%
-    full_join(results %>%
-                rename_(.dots = setNames(cnt.vals, paste0('z_',cnt.vals)))) %>%
-    select(grp.vars,everything())
+  #cnt.vals<-base::setdiff(colnames(results),)
+    # results %>%
+    # rename_(.dots = setNames(cnt.vals, paste0('x_',cnt.vals))) %>%
+    # full_join(results %>%
+    #             rename_(.dots = setNames(cnt.vals, paste0('y_',cnt.vals)))) %>%
+    # full_join(results %>%
+    #             rename_(.dots = setNames(cnt.vals, paste0('z_',cnt.vals)))) %>%
+    # select(grp.vars,everything())
 
 
   return(list('results'=results,
