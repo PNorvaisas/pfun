@@ -42,8 +42,7 @@ getresults<-function(data,contrasts.desc,groupings=c()) {
     spread(CS,Value) %>%
     mutate_at(vars(-contains('Stars'),-one_of(grp.vars)),as.numeric)
 
-
-  results.multi<-multiplex(results,c(cnt.vars,grp.vars),3)
+  results.multi<-multiplex(results,grp.vars,3)
 
   #cnt.vals<-base::setdiff(colnames(results),)
     # results %>%
