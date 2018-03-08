@@ -16,7 +16,8 @@ getresults<-function(data,contrasts.desc) {
   results<-contrasts.desc %>%
     mutate(Contrast=as.character(Contrast)) %>%
     right_join(data,by='Contrast') %>%
-    #Adjustments within contrast
+    group_by_(grp.vars,'Contrast') %>%
+    #Adjustments within contrast and original grouping
     adjustments %>%
     #Set contrast levels
     mutate(Contrast=factor(Contrast,levels=contrasts.desc$Contrast,labels=contrasts.desc$Contrast),
