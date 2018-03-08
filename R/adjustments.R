@@ -9,6 +9,13 @@
 #'
 
 adjustments<-function(data,groupings=c()){
+
+  if (length(groupings)>0 ){
+    groupings<-c(groupings,"Contrast")
+  } else {
+    groupings<-c("Contrast")
+  }
+
   data %>%
     group_by_("Contrast",groupings) %>%
     mutate(FDR=p.adjust(p.value,method = 'fdr'),
