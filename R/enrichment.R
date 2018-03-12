@@ -30,6 +30,6 @@ enrichment<-function(data,terms,IDs,comparisons,change,sign){
   data.c<-merge(data.m,data.tm,by=c(comparisons,'Test'),all.x=TRUE)
 
   data.c$p<-phyper(data.c$Term-1,data.c$Comparison,data.c$Comparison_total-data.c$Comparison,data.c$Term_total,lower.tail=FALSE)
-  data.c<-plyr::ddply(data.c,c(comparisons,'Test'),here(mutate),FDR=p.adjust(p,method='fdr'))
+  data.c<-plyr::ddply(data.c,c(comparisons,'Test'),plyr::here(mutate),FDR=p.adjust(p,method='fdr'))
   return(data.c)
 }
