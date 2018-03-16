@@ -10,7 +10,7 @@
 #' @examples
 #' hypothesise2()
 
-hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA,verbose=FALSE) {
+hypothesise<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA,verbose=FALSE) {
 
   if(!is.na(variable)) {
     print(unique(lmdata[,variable]))
