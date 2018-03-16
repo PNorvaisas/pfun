@@ -48,7 +48,7 @@ clustorder<-function(data,features,groups,value,dst.method='euclidean',cl.method
   }
 
   data<-data %>%
-    mutate_(.dots = setNames(paste0("factor(",features,", levels=c('",paste0(ordered,collapse="','"),"'))" ), features ))
+    mutate_(.dots = setNames(paste0("factor(",features,", levels=ordered)" ), features ))
 
   return(data)
 }

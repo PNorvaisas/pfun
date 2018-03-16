@@ -3,8 +3,6 @@
 #'
 #' @param cfile Excel file containing standard contrast table
 #' @param csheet Sheet in Excel file containing contrast table. Default: First sheet
-#' @param samples.selected Limit contrasts to selected samples
-#' @param variables Variables to preserve in the table
 #' @keywords read.contrasts contrasts
 #' @export
 #' @examples

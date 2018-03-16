@@ -14,9 +14,11 @@ hypothesise(lmdata, formula, cont.matrix, weights.col = NA, variable = NA,
 
 \item{weights.col}{Column with weights for observations. Default: NA}
 
-\item{lmshape}{Table containing samples in rows and variables in columns}
+\item{variable}{Name of the column with variables to print. Default: NA}
 
-\item{variables}{Name of the column with variables to print. Default: NA}
+\item{verbose}{Print dataset completeness}
+
+\item{lmshape}{Table containing samples in rows and variables in columns}
 }
 \description{
 Linear Hypothesis Testing in HT manner using Dplyr

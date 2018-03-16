@@ -4,7 +4,8 @@
 #' @param formula Formula for linear model in the form of "Values~0+Group"
 #' @param cont.matrix Contrast matrix with dummy variables.
 #' @param weights.col Column with weights for observations. Default: NA
-#' @param variables Name of the column with variables to print. Default: NA
+#' @param variable Name of the column with variables to print. Default: NA
+#' @param verbose Print dataset completeness
 #' @keywords hypothesise
 #' @export
 #' @examples

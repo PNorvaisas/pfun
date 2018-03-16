@@ -11,10 +11,6 @@ read.contrasts(cfile, csheet = 1)
 \item{cfile}{Excel file containing standard contrast table}
 
 \item{csheet}{Sheet in Excel file containing contrast table. Default: First sheet}
-
-\item{samples.selected}{Limit contrasts to selected samples}
-
-\item{variables}{Variables to preserve in the table}
 }
 \description{
 Get contrasts for Linear Hypothesis Testing in HT manner.
