@@ -3,6 +3,8 @@
 export(MinMeanSDMax)
 export(adjust.contrast)
 export(adjustments)
+export(contrast.adjust)
+export(covariation)
 export(enrichment)
 export(enrichment.melt)
 export(getellipse)
