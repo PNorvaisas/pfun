@@ -1,10 +1,10 @@
-#' Get contrasts for Linear Hypothesis Testing in HT manner
-#' Works with hypothesise
-#'
+#' Get contrasts for Linear Hypothesis Testing in HT manner.
+#' Works with hypothesise2
+#' 
 #' @param cfile Excel file containing standard contrast table
-#' @param csheet Sheet in Excel file containing contrast table
+#' @param csheet Sheet in Excel file containing contrast table. Default: First sheet
 #' @param samples.selected Limit contrasts to selected samples
-#' @param variables Other variables to preserve in table
+#' @param variables Variables to preserve in the table
 #' @keywords read.contrasts contrasts
 #' @export
 #' @examples
@@ -13,72 +13,29 @@
 #'
 
 
-read.contrasts<-function(cfile,csheet,samples.selected,variables=c()) {
+read.contrasts2<-function(cfile,csheet=1) {
   cont.table<-readxl::read_xlsx(cfile,sheet=csheet) %>%
     data.frame
-  rownames(cont.table)<-cont.table$Contrast
   contrasts<-cont.table$Contrast
+  
+  descriptions<-colnames(cont.table)[1:match('Reference',colnames(cont.table))]
+  
+  samples.all<-setdiff(colnames(cont.table),descriptions)
+                       
+  cont.table<-cont.table %>%
+    mutate_at(samples.all, as.numeric)
+  
+  cont.table.clean<-cont.table %>%
+    select(descriptions) %>%
+    mutate_all(as.factor)
 
-
-  #print(mval)
-
-  #Find columns which define samples
-  #samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) length(setdiff(x,c('-1','0','1')))==0)]
-
-
-
-  samples.all<-colnames(cont.table)[apply(cont.table,2,function(x) all(!grepl("[a-zA-Z]",x)))]
-
-
-
-  cont.table[,samples.all] <- sapply(cont.table[, samples.all], as.numeric)
-
-
-  if ('m' %in% colnames(cont.table) ){
-    mval<-TRUE
-  } else {
-    mval<-FALSE
-  }
-
-  samples.all<-setdiff(samples.all,c('m',variables))
-
-
-  samples.found<-intersect(samples.all,samples.selected)
-  samples.missing<-setdiff(samples.all,samples.found)
-
-
-  if (length(samples.selected)>length(samples.found)){
-    print("Some of the selected samples not present in the table!")
-    print(setdiff(samples.selected,samples.found))
-  } else {
-    print("All samples found!")
-    print(samples.found)
-  }
-
-  #print(samples.missing)
-
-  #Find contrasts that do not require missing samples
-  cont.use<-contrasts[apply(cont.table[,samples.found],1,function(x) any(x==1) | any(x==-1) )]
-
-  if ( length(samples.missing)>0 ) {
-    cont.nomiss<-contrasts[apply(cont.table[,samples.missing],1,function(x) all(x==0) )]
-    cont.clean<-intersect(cont.nomiss,cont.use)
-  } else {
-    cont.clean<-cont.use
-  }
-
-
-  cont.table.clean<-cont.table[cont.clean,,drop=FALSE]
-
-  if (mval==TRUE) {
-    cont.table.selected<-cont.table[cont.clean, c(samples.found,'m'),drop=FALSE]
-  } else {
-    cont.table.selected<-cont.table[cont.clean, samples.found,drop=FALSE]
-  }
-
-
-  cont.matrix<-as.matrix(cont.table.selected)
-
+  cont.matrix<-cont.table %>%
+    select(samples.all) %>%
+    as.matrix
+  
+  #rownames(cont.table.clean)<-contrasts
+  rownames(cont.matrix)<-contrasts
+  
   return(list("Contrasts.table"=cont.table.clean,"Contrasts.matrix"=cont.matrix))
 }
 

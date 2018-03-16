@@ -1,154 +1,151 @@
-#' Linear Hypothesis Testing in HT manner
+#' Linear Hypothesis Testing in HT manner using Dplyr
 #'
 #' @param lmshape Table containing samples in rows and variables in columns
-#' @param variables Variables to be tested in model
-#' @param cont.matrix Contrast matrix with dummy variables
-#' @param fml Formula that will be used to spread the effects of samples. DEFAULT to "0+Group"
+#' @param formula Formula for linear model in the form of "Values~0+Group"
+#' @param cont.matrix Contrast matrix with dummy variables.
+#' @param weights.col Column with weights for observations. Default: NA
+#' @param variables Name of the column with variables to print. Default: NA
 #' @keywords hypothesise
 #' @export
 #' @examples
-#' hypothesise()
+#' hypothesise2()
+
+hypothesise2<-function(lmdata,formula,cont.matrix,weights.col=NA,variable=NA,verbose=FALSE) {
+
+  if(!is.na(variable)) {
+    print(unique(lmdata[,variable]))
+    #print(unique(as.character(lmdata[,variable])))
+  }
+
+  grps<-unlist(strsplit(formula,'~'))[2]
+  valvar<-unlist(strsplit(formula,'~'))[1]
+  grpcol<-gsub("0\\+","",grps)
 
 
-hypothesise<-function(lmshape,variables,cont.matrix,formula="0+Group",weights.mat=NA){
-  grpcol<-gsub("0\\+","",formula)
-  groups.indata<-unique(lmshape[,grpcol])
+  lmcompleteness<-lmdata %>%
+    group_by_(grpcol) %>%
+    summarise_(.dots = setNames(paste0("sum(!is.na(",valvar,"))"), 'Observations')) %>%
+    data.frame
+
+  lmcomplete<-lmcompleteness %>%
+    filter(Observations>0)
+
+  if (verbose){
+    print(lmcompleteness)
+  }
+
+
+  groups.indata<-as.character(unique(lmcomplete[,grpcol]))
   groups.incontrasts<-colnames(cont.matrix)
+
   #print(groups.indata)
   #print(groups.incontrasts)
 
-  if(!is.null(dim(weights.mat))){
-    print('Using weights!')
-  }
-
+  #Remember m column, but remove it from matrix
   if ('m' %in% groups.incontrasts){
-    print('H0 values found!')
+    if (verbose){
+      print('H0 values found!')
+    }
+
     mval<-TRUE
-    groups.incontrasts<-setdiff(groups.incontrasts,'m')
+    groups.incontrasts<-base::setdiff(groups.incontrasts,'m')
   } else {
     mval<-FALSE
   }
 
-  if (length( setdiff(groups.indata,groups.incontrasts) )>0 ) {
+  if (length( base::setdiff(groups.indata,groups.incontrasts) )>0 ) {
     #More groups in data
-    print('Some of the groups in data not described in contrasts!')
-    groups.nocontrast<-setdiff(groups.indata,groups.incontrasts)
+    if (verbose){
+      print('Some of the groups in data not described in contrasts!')
+    }
+    groups.nocontrast<-base::setdiff(groups.indata,groups.incontrasts)
     groups.found<-intersect(groups.incontrasts,groups.indata)
     groups.miss<-c()
-  } else if (length(setdiff(groups.incontrasts,groups.indata))>0) {
+  } else if (length(base::setdiff(groups.incontrasts,groups.indata))>0) {
     #More groups in contrasts
-    print('Some of the groups in contrasts not described in data!')
+    if (verbose){
+      print('Some of the groups in contrasts not described in data!')
+    }
     groups.nocontrast<-c()
-    groups.miss<-setdiff(groups.incontrasts,groups.indata)
+    groups.miss<-base::setdiff(groups.incontrasts,groups.indata)
     groups.found<-intersect(groups.incontrasts,groups.indata)
   } else {
-    print('All groups from contrasts and data match!')
+    if (verbose){
+      print('All groups from contrasts and data match!')
+    }
     groups.nocontrast<-c()
     groups.miss<-c()
     groups.found<-intersect(groups.incontrasts,groups.indata)
   }
 
+  #Only use contrasts that do not depend on missing groups
   #Find contrasts that have at least one
-  cont.use<-rownames(cont.matrix)[ apply(cont.matrix[,groups.found],1, function(x) any(x!=0) ) ]
+
+  groups.removed<-base::setdiff(groups.incontrasts,groups.found)
+  if (length(groups.removed>0)) {
+    cont.remove<-rownames(cont.matrix)[ apply(cont.matrix[,groups.removed,drop=FALSE],1, function(x) any(x!=0) ) ]
+  } else {
+    cont.remove<-c()
+  }
+
+  #print(cont.remove)
+  #cont.miss<-rownames(cont.matrix)[ apply(cont.matrix[,groups.found,drop=FALSE],1, function(x) any(x!=0) ) ]
+
 
   #print(cont.use)
-  if (length(groups.miss)>0) {
-    #Remove contrasts that use missing groups
-    cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,groups.miss],1,function(x) all(x==0) )]
-    cont.clean<-intersect(cont.nomiss,cont.use)
-  } else {
-    cont.clean<-cont.use
-  }
+  #if (length(groups.miss)>0) {
+  #Remove contrasts that use missing groups
+  #cont.nomiss<-rownames(cont.matrix)[ apply(cont.matrix[,groups.miss,drop=FALSE],1,function(x) all(x==0) )]
 
+  cont.clean<-base::setdiff(rownames(cont.matrix),cont.remove)
 
-  print('Selected contrasts:')
-  print(cont.clean)
-
-  #lmshape<-subset(lmshape,Sample %in% groups.found)
-  lmshape<-lmshape[lmshape[,grpcol] %in% groups.found,]
-  if(!is.null(dim(weights.mat))){
-    weights.mat<-weights.mat[weights.mat[,grpcol] %in% groups.found,]
-  }
-  #print(dim(weights.mat))
+  #Remove leftover groups for clarity
+  groups.clean<-colnames(cont.matrix[,groups.found])[ apply(cont.matrix[cont.clean,groups.found,drop=FALSE],2, function(x) any(x!=0) ) ]
 
   if (mval==TRUE) {
-    cont.matrix.clean<-cont.matrix[cont.clean,c(groups.found,'m'),drop=FALSE]
+    cont.matrix.clean<-cont.matrix[cont.clean,c(groups.clean,'m'),drop=FALSE]
   } else {
-    cont.matrix.clean<-cont.matrix[cont.clean,groups.found,drop=FALSE]
+    cont.matrix.clean<-cont.matrix[cont.clean,groups.clean,drop=FALSE]
   }
 
-  #print(cont.matrix.clean)
-
-
-  #rownames(cont.matrix)
-  #print(cont.matrix)
-  #print(cont.matrix.clean)
-
-  lmshape[,grpcol]<-factor(lmshape[,grpcol],levels=groups.found,labels=groups.found)
-
-  if(!is.null(dim(weights.mat))){
-    weights.mat[,grpcol]<-factor(weights.mat[,grpcol],levels=groups.found,labels=groups.found)
-  }
-  #print(dim(weights.mat))
-
-  #Fix it to the smallest overlapping set
-
-  allresults.t<-data.frame()
-  prec<-0
-  len<-length(variables)
-  for (id in 1:length(variables)) {
-    pr<-as.character(variables[id])
-    #print(pr)
-    precn<-id*100/len
-    if (precn-prec>5) {
-      print(paste(round(precn,digits=0),'%',sep=''))
-      prec<-precn
+  #If no complete contrasts left - skip
+  if(sum(dim(cont.matrix.clean))<2 ){
+    if (verbose){
+      print("No comparisons to make!")
     }
-
-    if(!is.null(dim(weights.mat))){
-      model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape, weights=weights.mat[,pr])
-    } else{
-      model<-lm(as.formula(paste("`",pr,"`~",formula,sep="") ), data=lmshape)
-    }
-
-    #Generalised linear hypothesis testing
-    if (mval==TRUE) {
-      lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)],rhs=cont.matrix.clean[,'m'])
-    } else {
-      lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.found)])
-    }
-
-    result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
-
-    res<-plyr::ldply(result$test[c('coefficients','sigma','tstat','pvalues')])
-    res$Variable<-pr
-    allresults.t<-rbind(allresults.t,res)
+    return(data.frame())
   }
 
+  if (verbose){
+   print(cont.matrix.clean)
+  }
+  #print(groups.clean)
 
-  allresults.m<-reshape2::melt(allresults.t,id.vars = c('.id','Variable'),variable.name = 'Contrast',value.name = 'Value')
-  allresults<-reshape2::dcast(allresults.m,Variable+Contrast~`.id`,value.var = 'Value')
-  allresults<-plyr::rename(allresults,c('coefficients'='logFC','sigma'='SE','pvalues'='p.value','tstat'='t.value'))
+  lmdata<-lmdata %>%
+    filter_(paste0(grpcol,"%in% groups.clean")) %>%
+    mutate_(.dots=setNames(paste0("factor(",grpcol,",levels=groups.clean,labels=groups.clean)"),grpcol))
 
-  if (mval==TRUE){
-    allresults<-merge(allresults,cont.matrix.clean[,c('m'),drop=FALSE],by.x='Contrast',by.y=0,all.x=TRUE)
-    allresults$logFC<-allresults$logFC-allresults$m
-    allresults$m<-NULL
+
+  if(!is.null(dim(weights.col))){
+    model<-lm(as.formula(formula), data=lmdata, weights=weights.col)
+  } else{
+    model<-lm(as.formula(formula), data=lmdata)
   }
 
-  allresults$PE<-allresults$logFC+allresults$SE
-  allresults$NE<-allresults$logFC-allresults$SE
-  allresults$FDR<-p.adjust(allresults$p.value,method = 'fdr')
-  allresults$logFDR<--log10(allresults$FDR)
+  if (mval==TRUE) {
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.clean),drop=FALSE],rhs=cont.matrix.clean[,'m'])
+  } else {
+    lmod_glht <- multcomp::glht(model, linfct = cont.matrix.clean[,c(groups.clean),drop=FALSE])
+  }
 
-  allresults.m<-reshape2::melt(allresults,id.vars = c('Contrast','Variable'),measure.vars = c('logFC','SE','NE','PE','t.value','p.value','FDR'),
-                     variable.name = 'Stats',value.name = 'Value')
+  result<-multcomp:::summary.glht(lmod_glht,test=multcomp::adjusted("none"))
+  allresults<-data.frame(result$test[c('coefficients','sigma','tstat','pvalues')],m=result$rhs) %>%
+    rownames_to_column('Contrast') %>%
+    rename(logFC=coefficients,SE=sigma,p.value=pvalues,t.value=tstat) %>%
+    mutate(logFC=logFC-m,
+           m=NULL)
 
-  allresults.castfull<-reshape2::dcast(allresults.m,Variable~Contrast+Stats,value.var = 'Value')
-
-  allresults.msimple<-subset(allresults.m,Stats %in% c('logFC','FDR'))
-  allresults.cast<-reshape2::dcast(allresults.msimple,Variable~Contrast+Stats,value.var = 'Value')
-
-  return(list("All"=allresults,"Cast"=allresults.cast,"Melt"=allresults.m,"CastFull"=allresults.castfull))
+  return(allresults)
 }
+
 

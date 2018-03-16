@@ -4,18 +4,23 @@
 \alias{adjustments}
 \title{Expand output of GLHT, calculate FDR}
 \usage{
-adjustments(data, groupings = c())
+adjustments(data, groupings = c(), Sbrks = c(0, -log(0.05, 10), 2, 3, 4,
+  1000), Slbls = c("N.S.", "<0.05", "<0.01", "<0.001", "<0.0001"))
 }
 \arguments{
 \item{data}{Data from hypothesise2}
+
+\item{groupings}{Additional groupings of data over which FDR adjustments will be made}
+
+\item{Sbrks}{Significance breaks in -log10 scale}
+
+\item{Slbls}{Significance labels (one less than breaks)}
 }
 \description{
 Expand output of GLHT, calculate FDR
 }
 \examples{
 adjustments(x)
-
-
 }
 \keyword{FDR,}
-\keyword{pStars}
+\keyword{pStars,}

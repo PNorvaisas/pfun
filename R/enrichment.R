@@ -1,35 +1,36 @@
 #' Calculate enrichment
 #'
 #' @param data Table with data
-#' @param term Columns containing terms to calculate enrichment for
-#' @param IDs Columns with IDs of entities that each term contains
-#' @param comparisons Column containing differnet comparisons that will be tested
-#' @param change Column containing value for direction of change
-#' @param sign Column containing significance of change
+#' @param grouping Columns over which data needs to be grouped
+#' @param feature Feature for which enrichment is to be calculated
+#' @param Sbrks Enrichment breaks in -log10 scale
+#' @param Slbls Enrichment labels (one less than breaks)
 #' @keywords enrichment
 #' @export
 #' @examples
 #'
 
-enrichment<-function(data,terms,IDs,comparisons,change,sign){
-  #allIDs<-length(unique(data[,IDs]))
-  data.sum<-plyr::ddply(data,c(terms,comparisons),plyr::here(summarise),
-                  Term_total=length(get(IDs)),
-                  All=sum(get(sign)<0.05, na.rm = TRUE),
-                  Up=sum(get(sign)<0.05 & get(change)>0, na.rm = TRUE),
-                  Down=sum(get(sign)<0.05 & get(change)<0, na.rm = TRUE)
-  )
-  data.total<-plyr::ddply(data,c(comparisons),plyr::here(summarise),
-                    Comparison_total=length(get(IDs)),
-                    All=sum(get(sign)<0.05 & !duplicated(get(IDs)),na.rm = TRUE),
-                    Up=sum(get(sign)<0.05 & get(change)>0 & !duplicated(get(IDs)), na.rm = TRUE),
-                    Down=sum(get(sign)<0.05 & get(change)<0 & !duplicated(get(IDs)), na.rm = TRUE)
-  )
-  data.m<-reshape2::melt(data.sum,measure.vars=c('All','Up','Down'),variable.name='Test',value.name = 'Term')
-  data.tm<-reshape2::melt(data.total,measure.vars=c('All','Up','Down'),variable.name='Test',value.name = 'Comparison')
-  data.c<-merge(data.m,data.tm,by=c(comparisons,'Test'),all.x=TRUE)
-
-  data.c$p<-phyper(data.c$Term-1,data.c$Comparison,data.c$Comparison_total-data.c$Comparison,data.c$Term_total,lower.tail=FALSE)
-  data.c<-plyr::ddply(data.c,c(comparisons,'Test'),plyr::here(mutate),FDR=p.adjust(p,method='fdr'))
-  return(data.c)
+enrichment<-function(data,grouping,feature,
+                 Sbrks=c(0,-log(0.05,10),2,3,4,1000),
+                 Slbls=c('N.S.','<0.05','<0.01','<0.001','<0.0001') ){
+  data %>%
+    mutate(Up=logFC>0 & FDR <0.05,
+           Down=logFC<0 & FDR <0.05,
+           All=FDR <0.05) %>%
+    #gather different thresholds
+    gather(Type,Pass,Up,Down,All) %>%
+    group_by_(.dots=c(grouping,"Type")) %>%
+    mutate(Total_size=n(),
+           Total_pass=sum(Pass,na.rm = TRUE)) %>%
+    group_by_(.dots=c(grouping,"Type",feature,"Total_size","Total_pass") )%>%
+    summarise(Class_size=n(),
+              Class_pass=sum(Pass,na.rm = TRUE)) %>%
+    group_by_(.dots=c(grouping,"Type")) %>%
+    mutate(p.value=phyper(Class_pass-1,Total_pass,Total_size-Total_pass,Class_size,lower.tail =FALSE),
+           FDR=p.adjust(p.value,method="fdr"),
+           FE=(Class_pass/Class_size)/(Total_pass/Total_size),
+           logFDR=ifelse(-log10(FDR)<0,0,-log10(FDR)),
+           logFDRbin=cut(logFDR,breaks=Sbrks,labels=Slbls,right=FALSE)) %>%
+    ungroup %>%
+    mutate(Type=factor(Type,levels=c("All","Up","Down")))
 }

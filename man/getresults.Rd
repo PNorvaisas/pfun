@@ -4,12 +4,20 @@
 \alias{getresults}
 \title{Get formated results from LM dataset}
 \usage{
-getresults(data, contrasts.desc, groupings = c())
+getresults(data, contrasts.desc, groupings = c(), Sbrks = c(0, -log(0.05,
+  10), 2, 3, 4, 1000), Slbls = c("N.S.", "<0.05", "<0.01", "<0.001",
+  "<0.0001"))
 }
 \arguments{
 \item{data}{LM hypothesise output (do not ungroup it!)}
 
 \item{contrasts.desc}{Contrast descriptors}
+
+\item{groupings}{Additional groupings of data over which FDR adjustments will be made}
+
+\item{Sbrks}{Significance breaks in -log10 scale}
+
+\item{Slbls}{Significance labels (one less than breaks)}
 }
 \description{
 Get formated results from LM dataset

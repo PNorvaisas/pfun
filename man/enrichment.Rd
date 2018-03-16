@@ -4,20 +4,19 @@
 \alias{enrichment}
 \title{Calculate enrichment}
 \usage{
-enrichment(data, terms, IDs, comparisons, change, sign)
+enrichment(data, grouping, feature, Sbrks = c(0, -log(0.05, 10), 2, 3, 4,
+  1000), Slbls = c("N.S.", "<0.05", "<0.01", "<0.001", "<0.0001"))
 }
 \arguments{
 \item{data}{Table with data}
 
-\item{IDs}{Columns with IDs of entities that each term contains}
+\item{grouping}{Columns over which data needs to be grouped}
 
-\item{comparisons}{Column containing differnet comparisons that will be tested}
+\item{feature}{Feature for which enrichment is to be calculated}
 
-\item{change}{Column containing value for direction of change}
+\item{Sbrks}{Enrichment breaks in -log10 scale}
 
-\item{sign}{Column containing significance of change}
-
-\item{term}{Columns containing terms to calculate enrichment for}
+\item{Slbls}{Enrichment labels (one less than breaks)}
 }
 \description{
 Calculate enrichment
