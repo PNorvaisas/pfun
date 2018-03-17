@@ -37,7 +37,7 @@ clustorder<-function(data,features,groups,value,dst.method='euclidean',cl.method
   } else if (scalesel=='row') {
     heatmat<-t(scale(t(as.matrix(heatsum))))
   } else {
-    stop(paste0('Unknown scaling!: ',scalsel), call. = FALSE)
+    stop(paste0('Unknown scaling!: ',scalesel), call. = FALSE)
   }
 
   d<-dist(heatmat,method = dst.method)
