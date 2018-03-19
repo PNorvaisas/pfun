@@ -53,7 +53,7 @@ PCAprep<-function(data,ID,feature,value,info,scaling=TRUE,dmethod="euclidean",cm
   
   return(list("PC1prc"=PC1prc,"PC2prc"=PC2prc,
               "PC3prc"=PC3prc,"PC4prc"=PC4prc,
-              "Loadings"=ir.pca[2],"pca"=pca,
+              "Loadings"=pca[2],"pca"=pca,
               "Ellipses"=ellipses,'HC'=HC,
               "pcadata"=pcadata,"pcashape"=pcashape))
 }
