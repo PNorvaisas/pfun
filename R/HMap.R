@@ -17,9 +17,9 @@ HMap<-function(data,ID,feature,value,info,cols=list(),
                cdr="euclidean",cdc="euclidean",cmr="ward.D2",cmc="ward.D2",rmax=10) {
   
   heatshape<-data %>%
-    select(ID,feature,value) %>%
+    select_(ID,feature,value) %>%
     spread_(ID,value) %>%
-    data.frame
+    data.frame(check.names=FALSE)
   
   rownames(heatshape)<-heatshape[,feature]
   heatshape[,feature]<-NULL
@@ -32,7 +32,6 @@ HMap<-function(data,ID,feature,value,info,cols=list(),
     hanot<-hanot %>%
       select(-one_of(ID))
   }
-  
   
   if (length(cols)>0) {
     ha<-ComplexHeatmap::HeatmapAnnotation(df=hanot, col = cols )
@@ -55,14 +54,15 @@ HMap<-function(data,ID,feature,value,info,cols=list(),
   }
   
   ComplexHeatmap::Heatmap(heatmat,
-          column_names_side = 'top',
-          top_annotation = ha,
-          name = name,
-          clustering_distance_rows=cdr,
-          clustering_distance_columns=cdc,
-          clustering_method_rows=cmr,
-          clustering_method_columns=cmc,
-          row_dend_reorder = reorder.rows,
-          column_dend_reorder = reorder.columns,
-          row_names_max_width = unit(rmax, "cm"))
+                          column_names_side = 'top',
+                          top_annotation = ha,
+                          name = name,
+                          clustering_distance_rows=cdr,
+                          clustering_distance_columns=cdc,
+                          clustering_method_rows=cmr,
+                          clustering_method_columns=cmc,
+                          row_dend_reorder = reorder.rows,
+                          column_dend_reorder = reorder.columns,
+                          row_names_max_width = unit(rmax, "cm"))
+  
 }

@@ -11,14 +11,13 @@
 #' @keywords PCAprep
 #' @export
 #' @examples
-#' HMap(data,ID,feature,value,info,cols=list(),scalesel='row',rnames=FALSE,reorder.rows=TRUE,reorder.columns=TRUE,name='Z-score',title="Heatmap",cdr="euclidean",cdc="euclidean",cmr="ward.D2",cmc="ward.D2",rmax=10)
-
+#' PCAprep(data,ID,feature,value,info,cols=list(),scalesel='row',rnames=FALSE,reorder.rows=TRUE,reorder.columns=TRUE,name='Z-score',title="Heatmap",cdr="euclidean",cdc="euclidean",cmr="ward.D2",cmc="ward.D2",rmax=10)
 PCAprep<-function(data,ID,feature,value,info,scaling=TRUE,dmethod="euclidean",cmethod="ward.D2") {
   
   pcashape<-data %>%
     select_(ID,feature,value) %>%
     spread_(feature,value) %>%
-    data.frame
+    data.frame(check.names=FALSE)
   
   rownames(pcashape)<-pcashape[,ID]
   pcashape[,ID]<-NULL
@@ -28,6 +27,7 @@ PCAprep<-function(data,ID,feature,value,info,scaling=TRUE,dmethod="euclidean",cm
   } else {
     hpcashape<-pcashape
   }
+  
   HC<-dist(hpcashape,method=dmethod) %>% hclust(method=cmethod)
   
   pca <- prcomp(pcashape,

@@ -23,7 +23,7 @@ clustorder<-function(data,features,groups,value,dst.method='euclidean',cl.method
     unite_("grpvar",from=groups,remove = FALSE) %>%
     select_(features,"grpvar",value) %>%
     spread_("grpvar",value) %>%
-    data.frame
+    data.frame(check.names=FALSE)
 
   heatsum[is.na(heatsum)]<-fill
 
