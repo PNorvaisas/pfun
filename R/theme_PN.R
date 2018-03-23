@@ -7,7 +7,7 @@
 #' @examples
 #'
 
-theme_PN<-function(base_size = par()$ps, base_family = par()$family) {
+theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) {
   faces <- c("plain", "bold", "italic", "bold.italic")
   half_line <- base_size/2
   #%+replace%
@@ -21,17 +21,6 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family) {
                       size = 0.5,
                       linetype = par()$lty
   ),
-  # text = element_text(colour = par()$fg,
-  #                     face=faces[par()$font],
-  #                     family = base_family,
-  #                     size = base_size,
-  #                     angle = 0,
-  #                     margin = margin(),
-  #                     vjust = par()$adj,
-  #                     hjust = par()$adj,
-  #                     lineheight = par()$lheight,
-  #                     debug = FALSE
-  #                     ),
   text=element_text(),
   axis.title = element_text(size = rel(1.25),
                             colour = par()$col.lab,
@@ -52,14 +41,10 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family) {
   ), 
   legend.spacing = unit(5, "pt"),
   legend.key = element_rect(colour = NA), 
-  # panel.spacing = unit(half_line, "pt"),
-  # panel.spacing.x = NULL, 
-  # panel.spacing.y = NULL,
   panel.background = element_rect(fill = NA,
                                   colour = par()$col),
   panel.grid = element_blank(), 
   plot.background = element_rect(colour = NA),
-  #plot.margin = unit(par()$mar,"lines"),
   plot.title = element_text(face = "bold",
                             size = rel(1.2),
                             hjust = 0.5),
@@ -86,12 +71,10 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family) {
     thm <- thm + theme(axis.title.x = element_text(angle = 90), 
                        axis.title.y = element_text(angle = 90))
   }
-  # if (!is.na(par()$tck)) {
-  #   thm <- thm + theme(axis.ticks.length = unit(-par()$tck,"snpc"))
-  # }
-  # else {
-  #   thm <- thm + theme(axis.ticks.length = unit(-par()$tcl, "lines"))
-  # }
+  if (!grid) {
+    thm <- thm + theme(panel.grid.major = element_line(colour="#f0f0f0"),
+                       panel.grid.minor = element_blank())
+  }
   if (par()$xaxt == "n") {
     thm <- thm + theme(axis.line.x = element_blank(),
                        axis.text.x = element_blank(), 

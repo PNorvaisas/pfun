@@ -4,7 +4,7 @@
 \alias{theme_PN}
 \title{Theme Publication}
 \usage{
-theme_PN(base_size = par()$ps, base_family = par()$family)
+theme_PN(base_size = par()$ps, base_family = par()$family, grid = FALSE)
 }
 \arguments{
 \item{base_size}{Base size}
