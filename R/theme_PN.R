@@ -41,6 +41,7 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) 
   ), 
   legend.spacing = unit(5, "pt"),
   legend.key = element_rect(colour = NA), 
+  legend.margin=margin(t = 0, unit='cm'),
   panel.background = element_rect(fill = NA,
                                   colour = par()$col),
   panel.grid = element_blank(), 
