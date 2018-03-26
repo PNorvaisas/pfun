@@ -22,7 +22,7 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) 
                       linetype = par()$lty
   ),
   text=element_text(),
-  axis.title = element_text(size = rel(1.25),
+  axis.title = element_text(size = rel(7/6),
                             colour = par()$col.lab,
                             face = "bold"
   ), 
@@ -33,7 +33,7 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) 
   axis.text.x = element_text(margin = margin(t = 0.8 * half_line/2, b = 0.8 * half_line/2)),
   axis.text.y = element_text(margin = margin(r = 0.8 * half_line/2, l = 0.8 * half_line/2)),
   axis.ticks = element_line(colour = par()$fg), 
-  legend.title = element_text(size=rel(1.25),
+  legend.title = element_text(size=rel(7/6),
                               colour = par()$fg,
                               face="bold"),
   legend.text = element_text(size=base_size,
@@ -46,9 +46,9 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) 
   panel.grid = element_blank(), 
   plot.background = element_rect(colour = NA),
   plot.title = element_text(face = "bold",
-                            size = rel(1.2),
+                            size = rel(7/6),
                             hjust = 0.5),
-  strip.text = element_text(size = rel(1.2),
+  strip.text = element_text(size = rel(7/6),
                             face = "bold",
                             colour = par()$col.sub
   ), 
