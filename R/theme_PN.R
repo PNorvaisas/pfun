@@ -71,7 +71,7 @@ theme_PN<-function(base_size = par()$ps, base_family = par()$family,grid=FALSE) 
     thm <- thm + theme(axis.title.x = element_text(angle = 90), 
                        axis.title.y = element_text(angle = 90))
   }
-  if (!grid) {
+  if (grid) {
     thm <- thm + theme(panel.grid.major = element_line(colour="#f0f0f0"),
                        panel.grid.minor = element_blank())
   }
