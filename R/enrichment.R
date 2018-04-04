@@ -34,7 +34,7 @@ enrichment<-function(data,groups,
            FDR=p.adjust(p.value,method="fdr"),
            FE=(Class_pass/Class_size)/(Total_pass/Total_size),
            logFDR=ifelse(-log10(FDR)<0,0,-log10(FDR)),
-           logp=ifelse(-log10(p)<0,0,-log10(p)),
+           logp=ifelse(-log10(p.value)<0,0,-log10(p.value)),
            logpbin=cut(logp,breaks=Sbrks,labels=Slbls,right=FALSE)) %>%
     ungroup %>%
     mutate(Type=factor(Type,levels=c("All","Up","Down")))
