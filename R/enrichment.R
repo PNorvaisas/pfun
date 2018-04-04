@@ -1,8 +1,7 @@
 #' Calculate enrichment
 #'
 #' @param data Table with data
-#' @param grouping Columns over which data needs to be grouped
-#' @param feature Feature for which enrichment is to be calculated
+#' @param groups Groups for which enrichment is to be calculated. Can be column name string or vector of such names
 #' @param Sbrks Enrichment breaks in -log10 scale
 #' @param Slbls Enrichment labels (one less than breaks)
 #' @keywords enrichment
@@ -10,9 +9,13 @@
 #' @examples
 #'
 
-enrichment<-function(data,grouping,feature,
+enrichment<-function(data,groups,
                  Sbrks=c(0,-log(0.05,10),2,3,4,1000),
                  Slbls=c('N.S.','<0.05','<0.01','<0.001','<0.0001') ){
+  
+  
+  grouping<-group_vars(data)
+    
   data %>%
     mutate(Up=logFC>0 & FDR <0.05,
            Down=logFC<0 & FDR <0.05,
@@ -22,7 +25,7 @@ enrichment<-function(data,grouping,feature,
     group_by_(.dots=c(grouping,"Type")) %>%
     mutate(Total_size=n(),
            Total_pass=sum(Pass,na.rm = TRUE)) %>%
-    group_by_(.dots=c(grouping,"Type",feature,"Total_size","Total_pass") )%>%
+    group_by_(.dots=c(grouping,"Type",groups,"Total_size","Total_pass") )%>%
     summarise(Class_size=n(),
               Class_pass=sum(Pass,na.rm = TRUE)) %>%
     group_by_(.dots=c(grouping,"Type")) %>%

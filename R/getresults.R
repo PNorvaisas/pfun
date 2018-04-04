@@ -50,16 +50,6 @@ getresults<-function(data,contrasts.desc,groupings=c(),
 
   results.multi<-multiplex(results,grp.vars,3)
 
-  #cnt.vals<-base::setdiff(colnames(results),)
-    # results %>%
-    # rename_(.dots = setNames(cnt.vals, paste0('x_',cnt.vals))) %>%
-    # full_join(results %>%
-    #             rename_(.dots = setNames(cnt.vals, paste0('y_',cnt.vals)))) %>%
-    # full_join(results %>%
-    #             rename_(.dots = setNames(cnt.vals, paste0('z_',cnt.vals)))) %>%
-    # select(grp.vars,everything())
-
-
   return(list('results'=results,
               'cast'=results.cast,
               'castfull'=results.castfull,
