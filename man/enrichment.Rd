@@ -13,6 +13,8 @@ enrichment(data, groups, featureid, Sbrks = c(0, -log(0.05, 10), 2, 3, 4,
 
 \item{groups}{Groups for which enrichment is to be calculated. Can be column name string or vector of such names}
 
+\item{featureid}{Unique feature ID column}
+
 \item{Sbrks}{Enrichment breaks in -log10 scale}
 
 \item{Slbls}{Enrichment labels (one less than breaks)}

@@ -2,6 +2,7 @@
 #'
 #' @param data Table with data
 #' @param groups Groups for which enrichment is to be calculated. Can be column name string or vector of such names
+#' @param featureid Unique feature ID column 
 #' @param Sbrks Enrichment breaks in -log10 scale
 #' @param Slbls Enrichment labels (one less than breaks)
 #' @keywords enrichment
