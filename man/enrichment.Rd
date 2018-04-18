@@ -4,8 +4,9 @@
 \alias{enrichment}
 \title{Calculate enrichment}
 \usage{
-enrichment(data, groups, Sbrks = c(0, -log(0.05, 10), 2, 3, 4, 1000),
-  Slbls = c("N.S.", "<0.05", "<0.01", "<0.001", "<0.0001"))
+enrichment(data, groups, featureid, Sbrks = c(0, -log(0.05, 10), 2, 3, 4,
+  1000), Slbls = c("N.S.", "<0.05", "<0.01", "<0.001", "<0.0001"),
+  enrtype = "regular")
 }
 \arguments{
 \item{data}{Table with data}
