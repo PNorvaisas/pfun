@@ -4,7 +4,7 @@
 \alias{PCAprep}
 \title{Draw heatmap}
 \usage{
-PCAprep(data, ID, feature, value, info, scaling = TRUE,
+PCAprep(data, ID, feature, value, info, grouping = "All", scaling = TRUE,
   dmethod = "euclidean", cmethod = "ward.D2")
 }
 \arguments{
@@ -17,6 +17,8 @@ PCAprep(data, ID, feature, value, info, scaling = TRUE,
 \item{value}{Value to be used in heatmap}
 
 \item{info}{Table with descriptors of interest}
+
+\item{grouping}{Groups of observations for ellipses}
 
 \item{dmethod}{Distance measure for hierarchical clustering}
 
