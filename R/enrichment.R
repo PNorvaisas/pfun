@@ -19,12 +19,21 @@ enrichment<-function(data,groups,featureid,
   
   grouping<-group_vars(data)
   
+  print(paste("Grouping: ", paste(grouping,collapse=', ') ))
+  print(paste("Groups: ", paste(groups,collapse=', ') ))
+  
   prep<-data %>%
     mutate(Up=logFC>0 & FDR <0.05,
            Down=logFC<0 & FDR <0.05,
            All=FDR<0.05) %>%
     #gather different thresholds
     gather(Type,Pass,Up,Down,All)
+  
+  
+  
+  print("Direction of change breakdown done!")
+  
+  #Removes duplicated instances
   
   uniques<-prep %>% 
     group_by_(.dots=c(grouping,featureid,"Pass","Type")) %>%
@@ -34,7 +43,9 @@ enrichment<-function(data,groups,featureid,
               Unique_pass=sum(Pass,na.rm = TRUE) ) %>%
     ungroup
   
-  prep %>%
+  print("Calculating unique changes done!")
+  
+  enrichment<-prep %>%
     group_by_(.dots=c(grouping,"Type")) %>%
     mutate(Total_size=n(),
            Total_pass=sum(Pass,na.rm = TRUE)) %>%
@@ -42,13 +53,15 @@ enrichment<-function(data,groups,featureid,
     group_by_(.dots=c(grouping,"Type",groups,"Total_size","Total_pass","Unique_size","Unique_pass") ) %>%
     summarise(Class_size=n(),
               Class_pass=sum(Pass,na.rm = TRUE)) %>%
-    group_by_(.dots=c(grouping,"Type")) %>%
+    group_by_(.dots=c(grouping,"Type")) %>% #Group by both the initial grouping and type of change for correct FDR adjustment
     # Class_pass-1 because we are interested in what's the probability of drawing Class_pass or more. Otherwise, it would be Class_pass+1 or more
     #Good explanation at: https://blog.alexlenail.me/understanding-and-implementing-the-hypergeometric-test-in-python-a7db688a7458
-    mutate(p.value=case_when(enrtype!="regular" ~ phyper(Class_pass-1,Total_pass,Total_size-Total_pass,Class_size,lower.tail=FALSE),
-                             enrtype=="regular" ~ phyper(Class_pass-1,Unique_pass,Unique_size-Unique_pass,Class_size,lower.tail=FALSE)) ,
-           FE=case_when(enrtype!="regular" ~  (Class_pass/Class_size)/(Total_pass/Total_size),
-                        enrtype=="regular" ~ (Class_pass/Class_size)/(Unique_pass/Unique_size) ) ,
+    mutate(p.value=case_when(enrtype=="regular" ~ phyper(Class_pass-1,Unique_pass,Unique_size-Unique_pass,Class_size,lower.tail=FALSE),
+                             TRUE ~ phyper(Class_pass-1,Total_pass,Total_size-Total_pass,Class_size,lower.tail=FALSE)
+                             ) ,
+           FE=case_when(enrtype=="regular" ~ (Class_pass/Class_size)/(Unique_pass/Unique_size),
+                        TRUE ~  (Class_pass/Class_size)/(Total_pass/Total_size)
+                         ) ,
            FDR=p.adjust(p.value,method="fdr"),
            logFDR=ifelse(-log10(FDR)<0,0,-log10(FDR)),
            logp=ifelse(-log10(p.value)<0,0,-log10(p.value)),
@@ -56,4 +69,6 @@ enrichment<-function(data,groups,featureid,
            logFDRbin=cut(logFDR,breaks=Sbrks,labels=Slbls,right=FALSE)) %>%
     ungroup %>%
     mutate(Type=factor(Type,levels=c("All","Up","Down")))
+  
+  return(enrichment)
 }
